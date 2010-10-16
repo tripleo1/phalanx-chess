@@ -2,7 +2,9 @@ CC = gcc
 
 ####### choose the line that makes the binary faster on your machine
 # CFLAGS = -O3 -Wall -fomit-frame-pointer -funroll-loops
-CFLAGS = -O0 -Wall -Werror  -fomit-frame-pointer -march=k8 -std=c99 -D_GNU_SOURCE
+CFLAGS = -O0 -Wall -fomit-frame-pointer --std=gnu89 -D_GNU_SOURCE
+# -std=c99 
+#-Werror removed
 
 ####### debug/tuning options for developers
 # CFLAGS = -O -Wall -g3 -static
@@ -36,7 +38,7 @@ phalanx: .o $(OBJ)
 	mkdir .o
 
 clean:
-	rm -rf .o phalanx
+	rm -rf .o phalanx *.lrn learn.phalanx
 
 backup:
 	tar -czvf Archive/phalanx.tgz \

@@ -1,7 +1,7 @@
 #ifndef PHALANX_INCLUDED
 #define PHALANX_INCLUDED
 
-#define VERSION "XXII"
+#define VERSION "XXIII"
 
 #ifdef GNUFUN
 # include <getopt.h>

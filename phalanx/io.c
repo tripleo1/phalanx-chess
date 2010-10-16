@@ -36,11 +36,13 @@ for( s=A1; s!=H9; s++ )
   if( color(B[s]) == Color ) G[0].mtrl += Values[ B[s]>>4 ];
   else G[0].xmtrl += Values[ B[s]>>4 ];
 
-G[0].castling = 0; /* enabled all, disable if impossible: */
+/* busted! S.A.
+G[0].castling = 0;
 if( B[E1]!=WK || B[A1]!=WR ) G[0].castling |= WLONG;
 if( B[E1]!=WK || B[H1]!=WR ) G[0].castling |= WSHORT;
 if( B[E8]!=BK || B[A8]!=BR ) G[0].castling |= BLONG;
 if( B[E8]!=BK || B[H8]!=BR ) G[0].castling |= BSHORT;
+*/
 
 G[0].rule50 = 0;
 
@@ -731,14 +733,32 @@ for( s=A8; s>=A1; f++ )
 	s++;
 }
 
-switch( tolower(*f) )
+switch( *f )
 {
 	case 'w': Color = WHITE; break;
+	case 'W': Color = WHITE; break;
 	case 'b': Color = BLACK; break;
+	case 'B': Color = BLACK; break;
 	default:
 		puts("error: side to move must be either 'w' or 'b'");
 		return 1;
 }
+
+// set up castling
+
+// f++;
+
+G[0].castling = 0;
+if  (strchr(f, 'K')==NULL) G[0].castling |= WSHORT;
+if  (strchr(f, 'Q')==NULL) G[0].castling |= WLONG;
+if  (strchr(f, 'k')==NULL) G[0].castling |= BSHORT;
+if  (strchr(f, 'q')==NULL) G[0].castling |= BLONG;
+// #define WSHORT 1 /* if set, white short castling is impossible */
+
+//
+// en-passant
+
+// Sometime soon S.A.
 
 initbs();
 
@@ -984,11 +1004,11 @@ int command(void)
 	if( Inp[0] == '\0' )
 	if( fgets(Inp,255,stdin) == NULL ) strcpy(Inp,"quit\n");
 
-	if( strncmp(Inp,"exit\n",5) == 0 && Flag.analyze )
+	if( strncmp(Inp,"exit",4) == 0 && Flag.analyze )
 	{ Flag.machine_color = Flag.analyze = 0; Inp[0]='\0'; return 1; }
 
-	if( strncmp(Inp,"quit\n",5) == 0
-	 || strncmp(Inp,"exit\n",5) == 0 )
+	if( strncmp(Inp,"quit",4) == 0
+	 || strncmp(Inp,"exit",4) == 0 )
 	{
 		if( Flag.ponder < 2 ) return 0;
 		else
@@ -1007,7 +1027,7 @@ int command(void)
 	}
 
 /* COMMAND: analyze */
-	if( strncmp( Inp, "analyze\n", 8 ) == 0 )
+	if( strncmp( Inp, "analyze", 7 ) == 0 )
 	{
 		if( Flag.ponder >= 2 ) { Abort = 1; return 0; }
 		puts("analyze mode, type 'exit' to terminate");
@@ -1017,7 +1037,7 @@ int command(void)
 	}
 
 /* COMMAND: force */
-	if( strncmp( Inp, "force\n", 6 ) == 0 )
+	if( strncmp( Inp, "force", 5 ) == 0 )
 	{
 		if( Flag.ponder >= 2 ) { Abort = 1; return 0; }
 		puts("you play both");
@@ -1027,8 +1047,8 @@ int command(void)
 	}
 
 /* COMMANDS: white, black */
-	if(  strncmp( Inp, "white\n", 6 ) == 0
-	  || strncmp( Inp, "black\n", 6 ) == 0 )
+	if(  strncmp( Inp, "white", 5 ) == 0
+	  || strncmp( Inp, "black", 5 ) == 0 )
 	{
 		if( Flag.ponder >= 2 ) { Abort = 1; return 0; }
 		puts("you do not play both");
@@ -1038,7 +1058,7 @@ int command(void)
 	}
 
 /* COMMAND: both */
-	if( strncmp( Inp, "both\n", 5 ) == 0 )
+	if( strncmp( Inp, "both", 4 ) == 0 )
 	{
 		if( Flag.ponder >= 2 ) { Abort = 1; return 0; }
 		puts("machine plays both");
@@ -1047,10 +1067,11 @@ int command(void)
 	}
 
 /* COMMAND: new */
-	if( strncmp( Inp, "new\n", 4 ) == 0 )
+	if( strncmp( Inp, "new", 3 ) == 0 )
 	{
 		if( Flag.ponder >= 2 ) { Abort = 1; return 0; }
-		setfen("rnbqkbnr/pppppppp/////PPPPPPPP/RNBQKBNR/w");
+		// setfen("rnbqkbnr/pppppppp/////PPPPPPPP/RNBQKBNR/w");
+		setfen("rnbqkbnr/pppppppp/////PPPPPPPP/RNBQKBNR w KQkq");
 		DrawScore = -20;
 		if( Flag.analyze ) Flag.machine_color = WHITE;
 		else
@@ -1062,7 +1083,7 @@ int command(void)
 	}
 
 /* COMMAND: go */
-	if( strncmp( Inp, "go\n", 3 ) == 0 )
+	if( strncmp( Inp, "go", 2 ) == 0 )
 	{
 		if( Flag.ponder >= 2 ) { Abort = 1; return 0; }
 		Flag.machine_color = Color;
@@ -1070,11 +1091,11 @@ int command(void)
 	}
 
 /* COMMAND: bd */
-	if( strncmp( Inp, "bd\n", 3 ) == 0 || strncmp( Inp, "d\n", 2 ) == 0 )
+	if( strncmp( Inp, "bd", 2 ) == 0 || strncmp( Inp, "d\n", 2 ) == 0 )
 	{ printboard(NULL); Inp[0]='\0'; return 1; }
 
 /* COMMAND: bk */
-	if( strncmp( Inp, "bk\n", 3 ) == 0 )
+	if( strncmp( Inp, "bk", 2 ) == 0 )
 	{
 		tmove m[256]; int n;
 		extern void bk(tmove *, int );
@@ -1086,7 +1107,7 @@ int command(void)
 	}
 
 /* COMMAND: post */
-	if( strncmp( Inp, "post\n", 5 ) == 0 )
+	if( strncmp( Inp, "post", 4 ) == 0 )
 	{
 		Flag.post = 1;
 		puts("post on");
@@ -1094,7 +1115,7 @@ int command(void)
 	}
 
 /* COMMAND: nopost */
-	if( strncmp( Inp, "nopost\n", 7 ) == 0 )
+	if( strncmp( Inp, "nopost", 6 ) == 0 )
 	{
 		Flag.post = 0;
 		puts("post off");
@@ -1139,7 +1160,7 @@ int command(void)
 
 
 /* COMMAND: hard */
-	if( strncmp( Inp, "hard\n", 5 ) == 0 )
+	if( strncmp( Inp, "hard", 4 ) == 0 )
 	{
 		if( Flag.ponder==0 && Flag.easy==0 )
 		Flag.ponder = 1;
@@ -1148,7 +1169,7 @@ int command(void)
 	}
 
 /* COMMAND: easy */
-	if( strncmp( Inp, "easy\n", 5 ) == 0 )
+	if( strncmp( Inp, "easy", 4 ) == 0 )
 	{
 		if( Flag.ponder != 0 )
 		{
@@ -1189,7 +1210,7 @@ int command(void)
 	}
 
 /* COMMAND: book */
-	if( strncmp( Inp, "book\n", 5 ) == 0 )
+	if( strncmp( Inp, "book", 4 ) == 0 )
 	{
 		Flag.book = ! Flag.book;
 		if( Flag.book ) puts("book on");
@@ -1198,15 +1219,15 @@ int command(void)
 	}
 
 /* COMMAND: about */
-	if( strncmp( Inp, "about\n", 6 ) == 0 )
+	if( strncmp( Inp, "about", 5 ) == 0 )
 	{ about(); Inp[0]='\0'; return 1; }
 
 /* COMMAND: fen */
-	if( strncmp( Inp, "fen\n", 3 ) == 0 )
+	if( strncmp( Inp, "fen", 3 ) == 0 )
 	{ printpositionfen(); Inp[0]='\0'; return 1; }
 
 /* COMMAND: help */
-	if( strncmp( Inp, "help\n", 5 ) == 0 )
+	if( strncmp( Inp, "help", 4 ) == 0 )
 	{
 puts("COMMAND SUMMARY: about (shows settings), bd (displays position - same");
 puts("as 'd'), bk (shows book info), book (enables/disables book), both");
@@ -1240,7 +1261,7 @@ puts("# (comment)");
 	}
 
 /* COMMAND: xboard */
-	if( strncmp( Inp, "xboard\n", 7 ) == 0 )
+	if( strncmp( Inp, "xboard", 6 ) == 0 )
 	{
 		Flag.xboard = 2;
 		puts("xboard mode on");
@@ -1267,7 +1288,7 @@ puts("# (comment)");
 	}
 
 /* COMMAND: undo (xboard) */
-	if( strncmp( Inp, "undo\n", 5 ) == 0 || strncmp( Inp, "u\n", 2 ) == 0 )
+	if( strncmp( Inp, "undo", 4 ) == 0 || strncmp( Inp, "u\n", 2 ) == 0 )
 	{
 		if( Flag.ponder >= 2 ) { Abort = 1; return 0; }
 		if( Counter != 0 )
@@ -1283,7 +1304,7 @@ puts("# (comment)");
 	}
 
 /* COMMAND: remove (xboard) */
-	if( strncmp( Inp, "remove\n", 7 ) == 0 )
+	if( strncmp( Inp, "remove", 6 ) == 0 )
 	{
 		if( Flag.ponder >= 2 ) { Abort = 1; return 0; }
 		if( Counter > 1 )
@@ -1307,6 +1328,32 @@ puts("# (comment)");
 		else Flag.machine_color = 0;
 		if( Inp[0]=='e' ) Inp[0]='\0';
 		return 1;
+	}
+
+/* COMMAND: setboard <FEN> */
+/* added by Pascal Georges */
+	if( strncmp( Inp, "setboard ", 9 ) == 0 )
+	{
+		setfen(Inp+9);
+		Inp[0] = '\0';
+		return 1;
+	}
+
+/* COMMAND: st <SECONDS> */
+/* added by stevenaaus */
+	if( strncmp( Inp, "st ", 3 ) == 0 )
+	{
+	  int seconds;
+	  if( sscanf(Inp+3,"%i",&seconds) == 0 ) {
+	    // expected a time in seconds
+	    printf ("Error: \"st:\" expected integer , but got %s\n", Inp+3);
+	  }
+	  // time argv S.A.
+	  printf ("Setting average time to %i seconds\n",seconds);
+	  Flag.centiseconds = 100*seconds;
+	  Flag.level = averagetime;
+	  Inp[0] = '\0';
+	  return 1;
 	}
 
 /* COMMAND: test a position */

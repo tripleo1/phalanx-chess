@@ -356,13 +356,17 @@ int bookmove( tmove *m, int n )
 		{	int i;
 			char s[128];
 			if( Flag.xboard )
-			sprintf(s,"   0      0       0      0  book");
+			sprintf(s,"   0      0       0      0");
+			// sprintf(s,"   0      0       0      0  book");
 			else
 			sprintf(s,"Book moves ");
-			if( foundtxt ) sprintf(s+strlen(s),"1 ");
-			else sprintf(s+strlen(s),"2 ");
 			for( i=0; i!=index; i++ )
 			{ printm( m[moves[i]], s+strlen(s) ); }
+
+			// hacked by S.A. to show bookX at end of line
+			if( foundtxt ) sprintf(s+strlen(s),", book1");
+			else sprintf(s+strlen(s),", book2");
+
 			sprintf(s+strlen(s),"\n");
 			printf(s);
 			if( Flag.log!=NULL && Flag.ponder<2 )
