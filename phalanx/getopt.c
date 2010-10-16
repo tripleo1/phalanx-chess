@@ -1,6 +1,3 @@
-
-#include "phalanx.h"
-
 /* getopt.c  (slightly modified by O.Garcia, 12/4/92) */
 /* now it accepts either '-' or '/' as switch character */
 
@@ -81,20 +78,3 @@ getopt (int argc, char **argv, char *opts)
     }
   return (c);
 }
-
-#include "learn.c"
-#include "killers.c"
-#include "data.c"
-#include "levels.c"
-#include "bcreate.c"
-#include "moving.c"
-#include "search.c"
-#include "endgame.c"
-#include "book.c"
-#include "hash.c"
-#include "genmoves.c"
-#include "evaluate.c"
-#include "io.c"
-#include "static.c"
-#include "phalanx.c"
-
