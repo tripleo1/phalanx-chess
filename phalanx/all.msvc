@@ -1,32 +1,6 @@
 
 #include "phalanx.h"
 
-char *
-index (
-	char *s,
-	int c
-)
-{
-  int i;
-
-  while ((i = *s) && c != i)
-    s++;
-  return (*s ? s : 0);
-}
-
-char *
-rindex (char *s, char c)
-{
-  char *p;
-
-  for (p = s; *s; s++)
-    ;
-  while (c != *s && s >= p)
-    s--;
-  return (s < p ? 0 : s);
-}
-
-
 /* getopt.c  (slightly modified by O.Garcia, 12/4/92) */
 /* now it accepts either '-' or '/' as switch character */
 

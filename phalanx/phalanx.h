@@ -33,7 +33,9 @@
 #endif
 
 #ifdef _WIN32
+# ifndef __cplusplus
 # define inline __inline
+# endif
   typedef __int64 int64;
 #else
   typedef long long int64;
