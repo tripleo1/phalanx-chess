@@ -1,0 +1,21 @@
+position
+[White "Crafty 19.8"]
+[Black "phalanx"]
+[Date "2005.09.14"]
+setboard r1bqkb1r/ppp2ppp/2n/3p/2Bpn/5N/PPP2PPP/RNBQR1K/ w kq
+{-24 55514 600}
+[White "phalanx"]
+[Black "Crafty 19.8"]
+[Date "2005.09.14"]
+setboard r1bq1rk/pppp1ppp/2n2n/2b1p/2P/2N1P1P/PP1PNPBP/R1BQK2R/ b KQ
+{2 6387 660}
+[White "phalanx"]
+[Black "Crafty 19.8"]
+[Date "2005.09.14"]
+setboard r1bq1rk/pppp1ppp/2n1pn/6B/1bPP/2N2N/PPQ1PPPP/R3KB1R/ b KQ
+{-18 6387 540}
+[White "phalanx"]
+[Black "Crafty 19.8"]
+[Date "2005.09.15"]
+setboard rnbqkbnr/pppppppp///4P//PPPP1PPP/RNBQKBNR/ b KQkq
+{-35 10937 540}
