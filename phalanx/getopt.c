@@ -13,6 +13,8 @@
    in the public domain.
  */
 
+#if defined(_MSC_VER)
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -78,3 +80,5 @@ getopt (int argc, char **argv, char *opts)
     }
   return (c);
 }
+
+#endif
