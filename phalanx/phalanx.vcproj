@@ -209,7 +209,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\GETOPT.C"
+				RelativePath=".\src\getopt.c"
 				>
 			</File>
 			<File
