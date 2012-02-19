@@ -1,4 +1,3 @@
-CC = gcc
 
 ####### choose the line that makes the binary faster on your machine
 # CFLAGS = -O3 -Wall -fomit-frame-pointer -funroll-loops

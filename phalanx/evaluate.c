@@ -278,7 +278,7 @@ if( ( Nodes % timeslice ) == 0 && !Flag.analyze )
 
 if(Flag.polling)
 {
-  #if defined(__GNUC__) && !defined(__MINGW32__)
+#if defined(__GNUC__) && !defined(__MINGW32__)
   static fd_set readfds;
   static struct timeval tv;
   int data;
@@ -331,9 +331,6 @@ static int init = 0, pipe;
 #endif
 
 }
-
-
-
 
 /*
 		if( Flag.analyze )

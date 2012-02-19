@@ -1063,7 +1063,12 @@ void interrupt(int x)
 	while( command() ) {}
 
 	go_on:;
-	if( !Abort && !Flag.polling ) signal(SIGINT,interrupt);
+	if( !Abort && !Flag.polling )
+#if defined(_WIN32)
+	signal(SIGINT, handleSigint);
+#else
+	signal(SIGINT,interrupt);
+#endif
 }
 
 
