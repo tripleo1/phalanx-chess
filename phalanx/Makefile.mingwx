@@ -1,7 +1,8 @@
 ### Phalanx Makefile
 # editted by S.A to handle defaults passed by Scid Makefile
 
-LINK ?= $(CC)
+CC=i686-pc-mingw32-gcc
+LINK = $(CC)
 
 ### DEFINES
 ### -DSHOW_FORCED_MOVES
