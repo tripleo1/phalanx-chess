@@ -98,8 +98,8 @@ for( i=0; i!=n; i++ )
 		else
 		{ if(P[m1->from]&0x00FF) m1->value += 50; }
 
-		if( m->in1 != m->in2 ) /* pawn promotion */
-			m->value += Values[ m->in2>>4 ] - Values[ m->in1>>4 ];
+		if( m1->in1 != m1->in2a ) /* pawn promotion */
+			m1->value += Values[ m1->in2a>>4 ] - P_VALUE;
 
 		if( Depth > 200 ) m1->value += see( B, m1->from, m1->to );
 		else /* last moved piece */
