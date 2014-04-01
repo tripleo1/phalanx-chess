@@ -95,6 +95,20 @@ void l_startsearch(void)
 	int moves;
 	T1 = ptime();
 
+	/* Adjust the DrawScore to avoid long boring drawish endgames.
+	 * The default DrawScore is -20; Phalanx tries to avoid draws.
+	 * That's good, but I have observed too many games that ended
+	 * with the 50 moves rule draw, where the engine played
+	 * an KR vs KR endgame. The code below fixes that behaviour. */
+	if(
+		Counter>=80  /* Counter==80 is move #40 */
+		&&
+		(
+			   ( DrawScore <  0 && G[Counter].mtrl <= 3*R_VALUE )
+			|| ( DrawScore < 10 && G[Counter].mtrl <= R_VALUE )
+		)
+	  ) DrawScore++;
+
 	switch( Flag.level )
 	{
 	case timecontrol:
