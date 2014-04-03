@@ -507,7 +507,10 @@ if( Depth>0 || check )
 		}
 
 		if( n!=0 )
-		value = -search( m, n, alpha, CHECKMATE );
+		{
+			add_killer( m, n, NULL );
+			value = -search( m, n, alpha, CHECKMATE );
+		}
 		else
 		{ if(Depth!=0) value=Alpha; else value=result; }
 
