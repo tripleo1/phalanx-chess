@@ -389,7 +389,7 @@ if( repetition(1) ) /* third rep. draw */
 /********************************************************************
  *     Now it is time to look into the hashtable.
  ********************************************************************/
-if( SizeHT == 0 ) t = NULL;
+if( SizeHT == 0 || Depth<0 ) t = NULL;
 else
 if( (t=seekHT()) != NULL )
 if( t->depth >= Depth || ( Depth<300 && abs(t->value)>CHECKMATE-1000 ) )
@@ -745,12 +745,6 @@ else
 
 	result = approx_eval();
 
-	if( Depth < -400 )
-	{
-		PV[Ply][Ply].from=0;
-		goto end;
-	}
-
 	if( ( result < Beta+devi[Ply] && result > Alpha-devi[Ply] )
 	 || Totmat<=(B_VALUE+P_VALUE) )
 	result = static_eval();
@@ -861,7 +855,7 @@ end:
 if( result>=Beta && Depth>0 )
 	write_killer( G[Counter].m.from, G[Counter].m.to );
 
-if( SizeHT != 0 && Abort == 0 ) writeHT( result, Alpha, Beta );
+if( SizeHT != 0 && Depth >= 0 && Abort == 0 ) writeHT( result, Alpha, Beta );
 
 /**
 ***    Check learning file.
