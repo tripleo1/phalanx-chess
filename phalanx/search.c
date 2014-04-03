@@ -215,6 +215,10 @@ for( i=0; i!=n; i++ )
 		{ m[max].value = (CHECKMATE-5000)+Depth; return Alpha; }
 		maxi = i;
 	}
+	else if( i==0 && Depth>0 ) update_PV( m[max], Ply );
+	/* The line above helps to maintain a nice long PV in those rare
+	 * cases, where negascout is not able to confirm the fail-high
+	 * and then truncates the PV. */
 
 	{ tmove mo=m[max]; m[max] = m[i]; m[i] = mo; }
 }
