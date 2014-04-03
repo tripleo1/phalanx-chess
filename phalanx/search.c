@@ -514,7 +514,7 @@ else
 				ipom = Nod[i] = Nodes-lastnodes;
 				/* bubble up */
 				pom = m[i];
-				for( j=i; j>bgs+1 && Nod[i]>Nod[j-1]; j-- )
+				for( j=i; j>bgs+1 && ipom>Nod[j-1]; j-- )
 				{ m[j] = m[j-1]; Nod[j] = Nod[j-1]; }
 				m[j] = pom; Nod[j] = ipom;
 			}
