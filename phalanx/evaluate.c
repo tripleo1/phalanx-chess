@@ -27,7 +27,7 @@
 ***   Phalanx uses very simple implementation of static-eval cache.
 ***   It eats 512 kB and makes it about 10% faster on a 486.
 **/
-#define CACHE
+#undef CACHE
 #ifdef CACHE
 unsigned * C; /* 64k entries of 4 bytes: 256kB */
 #endif
