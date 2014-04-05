@@ -10,7 +10,7 @@
 #define EXTENSION_BASE 60
 
 #define NULL_MOVE_PRUNING 300
-#define FORWARD_PRUNING
+#undef FORWARD_PRUNING
 
 #define RECAPTURE_EXTENSIONS
 #define PEE_EXTENSIONS     /* entering kings+pawns endgame extends */
@@ -236,7 +236,6 @@ tmove m[256]; int n;  /* moves and number of moves */
 thashentry *t;
 int check;
 int lastiter;
-int depthplus = 0;
 int totmat = Totmat = G[Counter].mtrl+G[Counter].xmtrl;
 
 if(Ply%2) lastiter = -LastIter; else lastiter = LastIter;
@@ -438,11 +437,11 @@ if( Depth>0 || check )
 #ifdef FORWARD_PRUNING
 	if(  Depth < 100 && ! check && Totmat > 2000 && ( Color==WHITE ? Wknow.prune : Bknow.prune ))
 	{
-		if( result-devi[Ply] >= Beta )
+		if( result-devi[Ply]-N_VALUE >= Beta )
 			return Beta;
 		else
-		if( result-devi[Ply] > Alpha )
-			Alpha = result-devi[Ply];
+		if( result-devi[Ply]-N_VALUE > Alpha )
+			Alpha = result-devi[Ply]-N_VALUE;
 	}
 #endif
 
@@ -452,18 +451,17 @@ if( Depth>0 || check )
 #ifdef FORWARD_PRUNING
 	if(  Depth < 100 && ! check && Totmat > 2000 && ( Color==WHITE ? Wknow.prune : Bknow.prune ))
 	{
-		if( result >= Beta )
+		if( result-N_VALUE >= Beta )
 			return Beta;
 		else
-		if( result > Alpha )
-			Alpha = result;
+		if( result-N_VALUE > Alpha )
+			Alpha = result-N_VALUE;
 	}
 #endif
 
 #ifdef NULL_MOVE_PRUNING
 	if(
-		   Depth >= 100
-		&& result+100 >= Beta
+		result+100 >= Beta
 		&& ( result >= Beta || Depth > NULL_MOVE_PRUNING )
 		&& ! FollowPV
 		&& ! check
@@ -509,7 +507,7 @@ if( Depth>0 || check )
 		if( n!=0 )
 		{
 			add_killer( m, n, NULL );
-			value = -search( m, n, alpha, CHECKMATE );
+			value = -search( m, n, alpha, alpha+1 );
 		}
 		else
 		{ if(Depth!=0) value=Alpha; else value=result; }
@@ -520,11 +518,6 @@ if( Depth>0 || check )
 		Totmat = totmat;
 
 		if( value >= Beta ) { result = value; goto end; }
-
-		if( value > Alpha ) Alpha = value;
-		else
-		if( value < -CHECKMATE+P_VALUE && Alpha > -CHECKMATE+Q_VALUE )
-			if( Depth <= 300 ) depthplus = (160-EXTENSION_BASE);
 	}
 #endif
 
@@ -842,8 +835,7 @@ if( Flag.easy && n>10 ) blunder(m,&n);
 /*** Full-width search ***/
 if( Depth>0 || check )
 {
-	if( depthplus ) result = csearch(m,n,Alpha,Beta,depthplus);
-	else result = search(m,n,Alpha,Beta);
+	result = search(m,n,Alpha,Beta);
 }
 else /*** Quiescence ***/
 {

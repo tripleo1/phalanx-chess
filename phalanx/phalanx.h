@@ -495,7 +495,6 @@ extern void generate_legal_checks(tmove*,int*);
 extern int see( tsquare *, int, int );
 
 extern int search(tmove*,int,int,int);
-extern int csearch(tmove*,int,int,int,int);
 extern tmove root_search(void);
 
 extern int repetition(int);
