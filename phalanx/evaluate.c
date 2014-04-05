@@ -532,7 +532,7 @@ if( Depth>0 || check )
 	}
 
 #ifdef CHECK_EXTENSIONS
-	if( check )                 /* extend the lines */
+	if( check && Depth>0 )       /* extend the lines */
 	{
 		if( result>lastiter-50 && result>-250 )
 		{
