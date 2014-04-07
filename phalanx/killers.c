@@ -80,7 +80,7 @@ for( i=0; i!=n; i++ )
 	{
 		if( m1->in2 ) /* capture */
 		{
-			/* of last moved piece */
+			/* capture of last moved piece */
 			if( m1->to == G[Counter-1].m.to ) m1->value += 150;
 
 			m1->value += Values[ m1->in2>>4 ];
@@ -92,7 +92,11 @@ for( i=0; i!=n; i++ )
 			{ if( P[m1->to]&0x00FF )
 			  m1->value -= ( Values[ m1->in1>>4 ] >> 2 );
 			  else m1->value += 100; }
+
 			if( m1->value < 30 ) m1->value = 30;
+
+			if( Depth > 200 )
+			  m1->value += see( B, m1->from, m1->to );
 		}
 
 		/* leaving attacked square */
@@ -103,9 +107,6 @@ for( i=0; i!=n; i++ )
 
 		if( m1->in1 != m1->in2a ) /* pawn promotion */
 			m1->value += Values[ m1->in2a>>4 ] - P_VALUE;
-
-		if( Depth > 200 && m1->in2 )
-			m1->value += see( B, m1->from, m1->to );
 
 		if( Depth > 0 )
 		{
