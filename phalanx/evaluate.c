@@ -10,7 +10,6 @@
 #define EXTENSION_BASE 60
 
 #define NULL_MOVE_PRUNING 300
-#undef FORWARD_PRUNING
 
 #define RECAPTURE_EXTENSIONS
 #define PEE_EXTENSIONS     /* entering kings+pawns endgame extends */
@@ -432,32 +431,10 @@ G[Counter].check = check = checktest(Color);
 
 if( Depth>0 || check )
 {
-	result = approx_eval();
 
-#ifdef FORWARD_PRUNING
-	if(  Depth < 100 && ! check && Totmat > 2000 && ( Color==WHITE ? Wknow.prune : Bknow.prune ))
-	{
-		if( result-devi[Ply]-N_VALUE >= Beta )
-			return Beta;
-		else
-		if( result-devi[Ply]-N_VALUE > Alpha )
-			Alpha = result-devi[Ply]-N_VALUE;
-	}
-#endif
+	if(Depth<=0) result = approx_eval();
+	else         result = static_eval();
 
-	if(Depth>0)
-	{ result = static_eval(); }
-
-#ifdef FORWARD_PRUNING
-	if(  Depth < 100 && ! check && Totmat > 2000 && ( Color==WHITE ? Wknow.prune : Bknow.prune ))
-	{
-		if( result-N_VALUE >= Beta )
-			return Beta;
-		else
-		if( result-N_VALUE > Alpha )
-			Alpha = result-N_VALUE;
-	}
-#endif
 
 #ifdef NULL_MOVE_PRUNING
 	if(
