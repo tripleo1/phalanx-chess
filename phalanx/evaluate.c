@@ -742,7 +742,7 @@ else
 }
 
 #ifdef RECAPTURE_EXTENSIONS
-	if( G[Counter-1].m.in2 )
+	if( Depth>0 && G[Counter-1].m.in2 )
 	if( result<lastiter+50 && result<250 )   /* winning anyway: dont */
 	{
 		int i, t=G[Counter-1].m.to;
