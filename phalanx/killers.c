@@ -80,6 +80,9 @@ for( i=0; i!=n; i++ )
 	{
 		if( m1->in2 ) /* capture */
 		{
+			/* of last moved piece */
+			if( m1->to == G[Counter-1].m.to ) m1->value += 150;
+
 			m1->value += Values[ m1->in2>>4 ];
 			if( Color==WHITE )
 			{ if( P[m1->to]&0xFF00 )
@@ -101,9 +104,8 @@ for( i=0; i!=n; i++ )
 		if( m1->in1 != m1->in2a ) /* pawn promotion */
 			m1->value += Values[ m1->in2a>>4 ] - P_VALUE;
 
-		if( Depth > 200 ) m1->value += see( B, m1->from, m1->to );
-		else /* last moved piece */
-		if( m1->to == G[Counter-1].m.to ) m1->value += 150;
+		if( Depth > 200 && m1->in2 )
+			m1->value += see( B, m1->from, m1->to );
 
 		if( Depth > 0 )
 		{
