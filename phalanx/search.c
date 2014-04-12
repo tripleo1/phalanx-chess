@@ -44,7 +44,7 @@ if( Abort && ! NoAbort ) return 0;
 /*** internal iterative deepening ***/
 #define IID
 #ifdef IID
-if( Depth > 200 )
+if( Depth > 200 && Beta-Alpha>1 )
 {
 	int max=0;
 	for( i=1; i!=n; i++ ) if( m[i].value > m[max].value ) max=i;
