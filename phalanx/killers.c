@@ -70,6 +70,7 @@ for( i=0; i!=n; i++ )
 	{
 	  if( m1->from == mlv->from
 	    && m1->to == mlv->to
+	    && ( mlv->in2 == 0 || m1->in2 == mlv->in2 )
 	    && m1->in2a == mlv->in2a ) m1->value += 350;
 
 	  if( ht != NULL ) if( ht->move != 0 )
