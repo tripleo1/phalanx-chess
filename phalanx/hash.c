@@ -79,9 +79,7 @@ if( best == NULL )
 for( i=0; i!=REHASH; i++ )
 {
 	t = HT + ( G[Counter].hashboard + i ) % SizeHT;
-	if( best==NULL || best->depth > t->depth
-	 || ( best->depth==t->depth
-	   && best->result!=beta_cut && t->result==beta_cut ) ) best = t;
+	if( best==NULL || best->depth > t->depth ) best = t;
 }
 
 /* Checkmate score must be adjusted moves to be counted from
