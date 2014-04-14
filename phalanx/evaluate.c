@@ -15,7 +15,6 @@
 #define PEE_EXTENSIONS     /* entering kings+pawns endgame extends */
 #define CHECK_EXTENSIONS
 #define PAWNPUSH_EXTENSIONS
-#undef PAWNSTRIKE_EXTENSIONS
 
 #define minmv (P_VALUE)
 
@@ -351,15 +350,6 @@ if( G[Counter].mtrl<400 && G[Counter].mtrl<400 )
 if( material_draw() )
 { PV[Ply][Ply].from=0; return DRAW; }
 
-/*
-if( Depth <= -200 && G[Counter].rule50 >= 3 )
-{ printboard();
-  printf("[depth=%i]",Depth);
-  printm(G[Counter-1].m,NULL);
-  getchar();
-}
-*/
-
 if( G[Counter].rule50 >= 3 )
 if( repetition(1) ) /* third rep. draw */
 {
@@ -538,77 +528,6 @@ if( Depth>0 || check )
 		}
 		else  /* losing anyway */
 		{ int i; for( i=0; i!=n; i++ ) m[i].dch = 60; }
-	}
-#endif
-
-#ifdef PAWNSTRIKE_EXTENSIONS
-	if( piece(G[Counter-1].m.in1) == PAWN )
-	if(result>lastiter-50 && result>-250) /* winning anyway: dont extend */
-	{
-		/* Look at the targets of previous enemy move.
-		 * If it seems to be dangerous, extend all safe
-		 * captures of enemy's last moved pawn. */
-		int i;
-		int nex = 0;
-		int squ = G[Counter-1].m.to;
-		int t1=0, t2=0;
-		int newdch = EXTENSION_BASE-49;
-
-		if(Ply==1) newdch = (newdch+100) >> 1;
-
-		if( Color == WHITE ) /* targets of black p. */
-		{
-			if( color(B[squ-11]) == WHITE )
-			if( B[squ-11] >= KNIGHT )
-				t1 = squ-11;
-			if( color(B[squ-9]) == WHITE )
-			if( B[squ-9] >= KNIGHT )
-				t2 = squ-9;
-		}
-		else
-		{
-			if( color(B[squ+11]) == BLACK )
-			if( B[squ+11] >= KNIGHT )
-				t1 = squ+11;
-			if( color(B[squ+9]) == BLACK )
-			if( B[squ+9] >= KNIGHT )
-				t2 = squ+9;
-		}
-
-		if( t1 || t2 )
-		{
-			/* find all safe captures of the agressor */
-			for( i=0; i!=n; i++ ) if( m[i].to == squ )
-			if( piece(m[i].in1) == PAWN
-			 || ! attacktest( squ, enemy(Color) ) )
-			{ m[i].dch = newdch; nex ++; }
-
-			if( nex == 0 ) /* find all safe escapes */
-			for( i=0; i!=n; i++ ) if( m[i].dch == 100 )
-			if( ( t1 && m[i].from == t1 )
-			 || ( t2 && m[i].from == t2 ) )
-			if( ! attacktest( m[i].to, enemy(Color) )
-			 || Values[m[i].in2>>4] >= Values[m[i].in1>>4] )
-			if( newdch < m[i].dch )
-			{ m[i].dch = newdch; nex++; }
-
-			if( nex > 1 ) for(i=0;i!=n;i++)
-			if(m[i].dch==newdch) m[i].dch=100;
-# undef debug
-# ifdef debug
-			if( nex == 1 )
-			{
-			printboard(); printm( G[Counter-1].m, NULL );
-			puts("");
-			for( i=0; i!=n; i++ ) if( m[i].dch != 100 )
-			{
-				printm( m[i], NULL );
-				printf("/ %i  ", m[i].dch );
-			}
-			getchar();
-			}
-# endif
-		}
 	}
 #endif
 
