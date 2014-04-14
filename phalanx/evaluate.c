@@ -443,7 +443,7 @@ if( Depth>0 || check )
 		&& ! FollowPV
 		&& ! check
 		&& G[Counter].mtrl > Q_VALUE+B_VALUE        /* zugzwang fix */
-/*		&& G[Counter-1].m.special != 20 */  /* prev. node not nullm */
+/*		&& G[Counter-1].m.special != NULL_MOVE */  /* prev. node not nullm */
 		&& ( t==NULL || t->depth <= Depth-NULL_MOVE_PRUNING
 		  || t->result==beta_cut || t->value >= Beta )
 	)
@@ -455,7 +455,7 @@ if( Depth>0 || check )
 		tmove m[256]; int n;  /* moves and number of moves */
 
 		G[Counter].m.in1 = 0; /* disable en passant */
-		G[Counter].m.special = 20;
+		G[Counter].m.special = NULL_MOVE;
 		G[Counter].m.to = 2;
 		Counter ++; Ply ++;
 		G[Counter].castling = G[Counter-1].castling;

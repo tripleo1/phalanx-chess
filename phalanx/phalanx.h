@@ -235,6 +235,7 @@ tdist;
 
 #define SHORT_CASTLING 1
 #define LONG_CASTLING 2
+#define NULL_MOVE 20
 
 #define WSHORT 1 /* if set, white short castling is impossible */
 #define WLONG  2
