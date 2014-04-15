@@ -35,7 +35,6 @@ void l_level( char * l )
 	while( *l == ' ' ) l++;
 
 	if( *l == '\n' || *l == '\0' )
-	if( ! Flag.easy )
 	{
 		printf("fixed time %i seconds\n", moves );
 		Flag.level = fixedtime; Flag.centiseconds = moves*100;
@@ -66,24 +65,11 @@ void l_level( char * l )
 		 "level: %i moves in %i:%02i, increment %i seconds\n",
 		 moves, minutes, seconds, increment );
 
-	if( Flag.easy )
-	{
-		if( moves == 0 ) moves = 80;
-		Flag.level = fixedtime;
-		Flag.centiseconds =
-			(increment+minutes*60/moves)
-			* (150-Flag.easy);
-		if( Flag.post )
-		printf( "setting avg time to %i cs\n", Flag.centiseconds );
-	}
-	else
-	{
-		Flag.level = timecontrol;
-		Flag.moves = moves;
-		Flag.centiseconds = minutes*6000+seconds*100;
-		Flag.increment = increment;
-		Time = Flag.centiseconds;
-	}
+	Flag.level = timecontrol;
+	Flag.moves = moves;
+	Flag.centiseconds = minutes*6000+seconds*100;
+	Flag.increment = increment;
+	Time = Flag.centiseconds;
 }
 
 
