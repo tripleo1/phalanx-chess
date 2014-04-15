@@ -726,7 +726,15 @@ add_killer( m, n, t );
 PV[Ply][Ply].from = 0;
 
 /* easy levels: be blind: forget about some long and knight captures */
-if( Flag.easy && n>10 ) blunder(m,&n);
+if( Flag.easy && Nodes%(1+Flag.easy/1000)==0 )
+{
+	extern long T1;
+
+	if( n>10 && Flag.easy<100 ) blunder(m,&n);
+
+	if( Nodes*100 / max(ptime()-T1,1) > max(Flag.easy,100) )
+	{ usleep(100000); }
+}
 
 /*** Full-width search ***/
 if( Depth>0 || check )

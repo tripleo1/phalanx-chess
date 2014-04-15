@@ -230,12 +230,10 @@ if( Flag.log != NULL )
 if( Flag.book )
 if( Counter < 20 || Bookout < 4 || Flag.analyze )
 {
-	int b = 0;
+	int b;
 
-	if( Flag.easy && Counter > 4 )
-	{ if( rand()%128 < Flag.easy+Counter*4 ) b = -1; }
-
-	if( b==0 ) b = bookmove( m, n );
+	if( Flag.easy && rand()%100 > Flag.easy+100-Counter*10 ) b = -1;
+	else b = bookmove( m, n );
 
 	if( b != -1 )
 	{
@@ -267,15 +265,18 @@ else
 
 	Ply = 0;
 
-	LastIter = Alpha = sort_root_moves( m, n );
+	if(Flag.easy) LastIter = Alpha = -CHECKMATE;
+	else LastIter = Alpha = sort_root_moves( m, n );
+
 	LastTurn = ptime();
 
 	if( EasyMove == 3 && ! Flag.analyze ) { do_move(m); return m[0]; }
 
 	FollowPV = 1;
 	NoAbort = 0;
-	Depth = 290; Ply = 0;
-	A_d = 2;
+	if(Flag.easy) Depth=90; else Depth = 290;
+	Ply = 0;
+	A_d = Depth/100;
 
 	memset( Nod, 0, 256*sizeof(int) );
 

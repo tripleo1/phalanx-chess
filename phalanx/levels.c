@@ -9,8 +9,6 @@ long Otim = 600*100;
 /* return time in centiseconds */
 long ptime(void)
 {
-	if( Flag.easy ) return Nodes;
-	else
 	if( Flag.cpu ) return ((double)clock())*100/CLOCKS_PER_SEC;
 	else
 	{

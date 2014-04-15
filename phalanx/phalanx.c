@@ -24,11 +24,12 @@ printf("\n"
        "          -x <+/->  xboard mode on/off        default: on\n"
        "          -p <+/->  permanent brain on/off    default: off\n"
        "          -s <+/->  show thinking on/off      default: off\n"
-       "           -c <+/->  cpu time                  default: off\n"
+       "          -c <+/->  cpu time                  default: off\n"
        "          -o <+/->  polling input             default: on\n"
        "          -b <+/->  opening book              default: on\n"
        "          -r <resign value in centipawns>     default: 0 (no resigning)\n"
-       "          -e <easy level 0...100>             default: 0 (best play)\n"
+       "          -e <easy level 0...99>              default: 0 (best play)\n"
+       "          -e <NPS limit, min limit is 100>    default: 0 (no limit)\n"
        "          -l <+/->  learning on/off           default: on\n"
        "          -v        print version and exit\n"
        "          -P <primary book directory>\n"
@@ -191,7 +192,7 @@ switch(c)
 		{
 		static int e;
 		if( sscanf( optarg, "%i", &e ) == 0 ) badoptions();
-		if( e > 100 ) badoptions();
+		if( e < 0 ) badoptions();
 		Flag.easy = e;
 		} break;
 	case 'p': switch(*optarg)
