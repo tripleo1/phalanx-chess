@@ -265,8 +265,24 @@ else
 
 	Ply = 0;
 
-	if(Flag.easy) LastIter = Alpha = -CHECKMATE;
-	else LastIter = Alpha = sort_root_moves( m, n );
+	if(!Flag.easy)
+		LastIter = Alpha = sort_root_moves( m, n );
+	else
+	{
+		/* Easy levels: Let's shuffle the moves to add randomness.
+		 * Just not for the first move so that we can repeat
+		 * test runs on positions with the same results */
+		int i;
+		if( Counter>1 )
+		for( i=1; i<n; i++ )
+		{
+			tmove mm;
+			int ii = rand()%(i+1);
+			mm=m[i]; m[i]=m[ii]; m[ii]=mm;
+		}
+
+		LastIter = Alpha = -CHECKMATE;
+	}
 
 	LastTurn = ptime();
 
