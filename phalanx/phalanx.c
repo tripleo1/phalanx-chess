@@ -421,7 +421,12 @@ if( Learn.f == NULL && Flag.learn )
 
 printf("tellics set 1 Phalanx "); printf(VERSION);
 if( Flag.easy )
+{
+	if( Flag.easy < 100 )
 	printf(", easy level %i\n", Flag.easy );
+	else
+	printf(", nodes per second limit = %i\n", Flag.easy );
+}
 else
 	printf(", %i kB hashtable, %i/%i kB P/S opening book", (int)(((1+SizeHT)*sizeof(thashentry)-1)/1024),(int)(Pbook.filesize/1024), (int) (Sbook.filesize/1024));
 printf("\n");
