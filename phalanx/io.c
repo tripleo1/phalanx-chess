@@ -487,7 +487,7 @@ void printPV( int mpl, int lid, char *s )
 #else
 	for(j=0;PV[0][j].from;j++)
 	{
-		if( j%mpl == 0 && j != 0 && Flag.xboard!=2 )
+		if( j%mpl == 0 && j != 0 && Flag.xboard<2 )
 		{
 			int i;
 			sprintf( ss+strlen(ss), "\n" );
@@ -532,7 +532,7 @@ if( Flag.log && s==NULL )
 	fprintf(Flag.log,"%s", ss);
 }
 
-if( Flag.xboard == 2 )
+if( Flag.xboard > 1 )
 switch( typ )
 {	case 0: /* ICS whispering */
 		if( Flag.ponder<2 && Flag.xboard>1 && typ==0 )
@@ -699,7 +699,7 @@ tgamenode p, q;
    {
      fprintf(Flag.log,"\n\nsetting position\n%s\n\n",f);
    }
-   if (Flag.xboard != 0)
+   if (Flag.xboard > 0)
       errmsg = errstring;
    else  /* interactive mode */
       errmsg = strchr(errstring, ' ') + 1; /* skip "tellusererror" */
@@ -1117,7 +1117,8 @@ int command(void)
            "time=1 "
            "draw=0 "
            );
-		Inp[0]='\0'; return 1;
+	   Flag.xboard=20;
+	   Inp[0]='\0'; return 1;
 	}
 
          
@@ -1596,7 +1597,7 @@ while( command() )
 /*				 && m.value > -CHECKMATE+100	*/
 				)
 				{
-					if( Flag.xboard )
+					if( Flag.xboard>0 )
 						puts("tellics resign");
 					if( Color == WHITE )
 						puts("1-0 {Black resigns}");
@@ -1604,10 +1605,16 @@ while( command() )
 				}
 			}
 
-			printf("my move is "); printm( m, NULL );
-			if( Flag.xboard )
-			{ printf("\n%i. ... ",(Counter+1)/2); gnuprintm(m); }
-			puts("");
+			if( Flag.xboard >= 20 )
+			{ printf("move "); gnuprintm(m); printf("\n"); }
+			else
+			  {
+			  printf("my move is "); printm( m, NULL );
+
+			  if( Flag.xboard>0 )
+			  { printf("\n%i. ... ",(Counter+1)/2); gnuprintm(m); }
+			  puts("");
+			}
 
 			switch( ( ter = terminal() ) )
 			{

@@ -302,7 +302,7 @@ if(Flag.polling)
 
   /* If we're running under XBoard then we can't use _kbhit() as the input commands
    * are sent to us directly over the internal pipe */
-  if (Flag.xboard) {
+  if (Flag.xboard>0) {
 #if defined(FILE_CNT)
     if (stdin->_cnt > 0) return stdin->_cnt;
 #endif
