@@ -260,8 +260,8 @@ void gnuprintm(tmove m)
 
 switch( m.special )
 {
-  case LONG_CASTLING:  printf("o-o-o"); return;
-  case SHORT_CASTLING: printf("o-o"); return;
+  case LONG_CASTLING:  printf("O-O-O"); return;
+  case SHORT_CASTLING: printf("O-O"); return;
 }
 
 printf( "%c%c%c%c%c",
