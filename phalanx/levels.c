@@ -182,8 +182,24 @@ int l_iterate(void)
 			case 1:  return ( t <= T1 + T2/3 );
 			case 2:  return ( t <= T1 + T2/6 );
 			default:
-				if( Turns==0 ) return ( t <= T1 + T2 );
-				else return ( t <= T1 + T2*(8+Turns)/8 );
+				/* fix to avoid being flagged too often
+				 * at very low NPS */
+				if( Flag.easy && Depth<=300 ) 
+				{
+				  if( Depth <= 100 )
+				  return ( t <= T1 + T2/8 );
+				  if( Depth<=200 )
+				  return ( t <= T1 + T2/4 );
+				  else
+				  return ( t <= T1 + T2/2 );
+				}
+				else
+				{
+				  if( Turns==0 || (Flag.easy && Flag.easy<100) )
+					return ( t <= T1 + T2 );
+				  else
+					return ( t <= T1 + T2*(8+Turns)/8 );
+				}
 		}
 	}
 	else

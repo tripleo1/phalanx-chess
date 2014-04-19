@@ -283,8 +283,8 @@ default: badoptions();
 }
 
 if( Flag.easy )
-{ SizeHT = 0; Flag.ponder = 0; Flag.learn = 0; }
-else
+{ Flag.learn = 0; Flag.ponder = 0; if( Flag.easy<100 ) SizeHT = 0; }
+
 if( SizeHT != 0 )
 {
 	HT = calloc( SizeHT, sizeof(thashentry) );

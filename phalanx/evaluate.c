@@ -35,7 +35,7 @@ unsigned * C; /* 64k entries of 4 bytes: 256kB */
 void blunder( tmove *m, int *n )
 {
 int i;
-int initp = Flag.easy;
+int initp = 100-Flag.easy;
 
 /* quick look (small Depth) makes blunders */
 initp -= Depth/10;
@@ -47,18 +47,18 @@ initp += Ply*2;
 initp += (G[Counter].mtrl+G[Counter].xmtrl) / 200;
 
 if(Counter>1)
-for( i=(*n)-1; i>=0 && (*n)>4; i-- )
+for( i=(*n)-1; i>=1 && (*n)>4; i-- )
 {
 	/* compute the probability this move is not seen */
 	int p = initp;
 
 	/* being blind to recaptures is too stupid, see them */
 	if( m[i].to == G[Counter-1].m.to )
-	p -= 30;
+	p -= 90;
 
 	/* same for pawn captures */
 	if( m[i].in2 != 0 && piece(m[i].from)==PAWN )
-	p -= 40;  /* another bonus for this is in the next section */
+	p -= 90;  /* another bonus for this is in the next section */
 
 	/* same for very short captures */
 	switch( dist[120*m[i].from+m[i].to].max )
@@ -69,16 +69,16 @@ for( i=(*n)-1; i>=0 && (*n)>4; i-- )
 
 	/* underpromotions? too precise! */
 	if( m[i].in1 != m[i].in2a  &&  piece(m[i].in2a) != QUEEN )
-	p += 10;
+	p += 5;
 	else
-	p -= 10;
+	p -= 5;
 
 	/* dont see long moves, especially diagonal ones */
 	p += dist[120*m[i].from+m[i].to].taxi * 2;
 
 	/* dont see some knight moves */
 	if( piece(m[i].in1) == KNIGHT )
-	p += 10;
+	p += 5;
 
 	/* going backward?  (white)Bf6xc3 is much more difficult
 	 * to see than (white)Bc3xf6 ***/
@@ -87,8 +87,8 @@ for( i=(*n)-1; i>=0 && (*n)>4; i-- )
 	else
 		p += 3 * ( m[i].from/10 - m[i].to/10 );
 
-	if( rand()%128 < p )
-	{ m[i] = m[(*n)-1]; (*n)--; }
+	if( rand()%300 < p )
+	{ m[i] = m[(*n)-1]; (*n)--; /* printf("[%i]",p); */ }
 }
 }
 
@@ -229,6 +229,7 @@ int evaluate( int Alpha, int Beta )
 {
 
 static int timeslice = 2000;
+static int polslice = 4000;
 int result;
 tmove m[256]; int n;  /* moves and number of moves */
 thashentry *t;
@@ -253,21 +254,20 @@ if( ( Nodes % timeslice ) == 0 && !Flag.analyze )
 	  Nodes * t / ( Flag.centiseconds - t ) * 2 / 3;
 
 	if( timeslice > 5*Flag.centiseconds ) timeslice = 5*Flag.centiseconds;
-	if( timeslice < 50 ) timeslice = 50;
+	if( timeslice < 50 ) timeslice=50;
 }
 
 {
-	static int slice = 4000;
 	static int64 lnodes = 0;
-	if( lnodes + slice < Nodes || Nodes == 1 )
+	if( lnodes + polslice < Nodes || Nodes == 1 )
 	{
 		static long lptime = 0;
 		long nptime = ptime();
 
 		if( nptime == lptime ) nptime++;
 
-		if( nptime - lptime < 100 ) slice = slice*11/10;
-		else slice = slice*10/11;
+		if( nptime - lptime < 100 ) polslice = polslice*11/10;
+		else { polslice = polslice*10/11; }
 
 		lptime = nptime;
 
@@ -725,15 +725,27 @@ add_killer( m, n, t );
 
 PV[Ply][Ply].from = 0;
 
-/* easy levels: be blind: forget about some long and knight captures */
-if( Flag.easy && Nodes%(1+Flag.easy/1000)==0 )
+if( Flag.easy )
 {
-	extern long T1;
 
+	/* easy levels below 100
+	 * be blind: forget about some long and knight captures */
 	if( n>10 && Flag.easy<100 ) blunder(m,&n);
 
-	if( Nodes*100 / max(ptime()-T1,1) > max(Flag.easy,100) )
-	{ usleep(100000); }
+	/* timecontrol fix */
+	if( polslice > Flag.easy+200 ) polslice=Flag.easy+200;
+
+	/* Now limit the NPS, lowest value is 100.
+	 * For higher values of easy levels like 50000 nps, there's no need
+	 * to check for the limit and call ptime() at every node,
+	 * hence the condition below */
+	if( Nodes%(1+Flag.easy/500)==0 )
+	{
+		extern long T1;
+
+		if( Nodes*100 / max(ptime()-T1,1) > max(Flag.easy,100) )
+		{ usleep(100000); }
+	}
 }
 
 /*** Full-width search ***/
