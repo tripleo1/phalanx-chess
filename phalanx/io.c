@@ -1117,7 +1117,7 @@ int command(void)
            "time=1 "
            "draw=0 "
            );
-	   Flag.xboard=20;
+	   Flag.xboard=20; /* version 2 */
 	   Inp[0]='\0'; return 1;
 	}
 
@@ -1295,7 +1295,11 @@ int command(void)
 	 || strncmp( Inp, "name ", 5 ) == 0
 	 || strncmp( Inp, "random\n", 7 ) == 0
 	 || strncmp( Inp, "noise ", 6 ) == 0
+	 || strncmp( Inp, "result ", 7 ) == 0
+	 || strncmp( Inp, "accepted\n", 9 ) == 0
+	 || strncmp( Inp, "rejected\n", 9 ) == 0
 	 || strncmp( Inp, ".\n", 2 ) == 0
+	 || strncmp( Inp, "?\n", 2 ) == 0
 	)
 	{ /* ignore */ Inp[0]='\0'; return 1; }
 

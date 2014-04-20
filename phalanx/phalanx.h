@@ -416,6 +416,7 @@ extern int Totmat;                  /* total mtrl sum on the board */
 extern int Abort, NoAbort;          /* abort the search when SIG_INT */
 extern long AllDepth;                 /* Statistics for average Depth */
 extern int64 AllNPS;
+extern long T1, T2;                 /* time started & planned on a move */
 
 extern int DrawScore;
 #define DRAW ( Ply%2 ? -DrawScore : DrawScore )

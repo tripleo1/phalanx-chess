@@ -41,30 +41,38 @@ int initp = 100-Flag.easy;
 initp -= Depth/10;
 
 /* deep nodes are difficult to compute */
-initp += Ply*2;
+initp += Ply*10;
 
 /* full board means more blunders */
 initp += (G[Counter].mtrl+G[Counter].xmtrl) / 200;
 
-if(Counter>1)
+if(Counter>2)
 for( i=(*n)-1; i>=1 && (*n)>4; i-- )
 {
 	/* compute the probability this move is not seen */
 	int p = initp;
 
-	/* being blind to recaptures is too stupid, see them */
 	if( m[i].to == G[Counter-1].m.to )
-	p -= 90;
+	{
+		/* being blind to recaptures is too stupid, see them */
+		if( G[Counter-1].m.in2 ) p -= 100;
+		else p += 20;
+		/* previous move was not a capture - we believe it was safe */
+	}
 
-	/* same for pawn captures */
+	/* We focus on the piece that moved 2 plies ago and see the
+	 * moves of the same piece */
+	if( m[i].from == G[Counter-2].m.to ) p -= 100;
+
+	/* not blind to pawn captures */
 	if( m[i].in2 != 0 && piece(m[i].from)==PAWN )
-	p -= 90;  /* another bonus for this is in the next section */
+	p -= 20;  /* another bonus for this is in the next section */
 
 	/* same for very short captures */
 	switch( dist[120*m[i].from+m[i].to].max )
-	{ case 0: case 1: p -= 80; break;
-	  case 2: p -= 50; break;
-	  case 3: p -= 10; break;
+	{ case 0: case 1: p -= 100; break;
+	  case 2: p -= 80; break;
+	  case 3: p -= 30; break;
 	}
 
 	/* underpromotions? too precise! */
@@ -74,18 +82,18 @@ for( i=(*n)-1; i>=1 && (*n)>4; i-- )
 	p -= 5;
 
 	/* dont see long moves, especially diagonal ones */
-	p += dist[120*m[i].from+m[i].to].taxi * 2;
+	p += dist[120*m[i].from+m[i].to].taxi * 5;
 
-	/* dont see some knight moves */
+	/* dont see some knight moves - remove the short distance bonus */
 	if( piece(m[i].in1) == KNIGHT )
-	p += 5;
+	p += 80;
 
 	/* going backward?  (white)Bf6xc3 is much more difficult
 	 * to see than (white)Bc3xf6 ***/
 	if( Color==WHITE )
-		p += 3 * ( m[i].to/10 - m[i].from/10 );
+		p += 10 * ( m[i].to/10 - m[i].from/10 );
 	else
-		p += 3 * ( m[i].from/10 - m[i].to/10 );
+		p += 10 * ( m[i].from/10 - m[i].to/10 );
 
 	if( rand()%300 < p )
 	{ m[i] = m[(*n)-1]; (*n)--; /* printf("[%i]",p); */ }
@@ -727,7 +735,6 @@ PV[Ply][Ply].from = 0;
 
 if( Flag.easy )
 {
-
 	/* easy levels below 100
 	 * be blind: forget about some long and knight captures */
 	if( n>10 && Flag.easy<100 ) blunder(m,&n);
@@ -741,10 +748,25 @@ if( Flag.easy )
 	 * hence the condition below */
 	if( Nodes%(1+Flag.easy/500)==0 )
 	{
-		extern long T1;
+		int nps_actual = Nodes*100/max(ptime()-T1,1);
+		int nps_target = Flag.easy;
 
-		if( Nodes*100 / max(ptime()-T1,1) > max(Flag.easy,100) )
-		{ usleep(100000); }
+		if( nps_target < 100 ) nps_target += 100;
+
+		/* Blundering easy levels:
+		 * below 10 seconds stoptime for move we raise NPS somewhat
+		 * to avoid being flagged often at fast timecontrols.
+		 * The blunders are still being added to the search.
+		 * This is to be able to play at faster time controls.
+		 * We don't care about non-blundering low NPS levels,
+		 * these cannot be used at very fast blitz. */
+		if( Flag.easy<100 && T2<1000 )
+		{
+			nps_target += (1000-T2)/4;
+			/* printf("[%li]\n",T2); */
+		}
+
+		if( nps_actual > nps_target ) usleep(100000);
 	}
 }
 
