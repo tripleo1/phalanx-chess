@@ -1106,17 +1106,25 @@ int command(void)
 	}
 
 /* COMMAND: protover */
-/* added by Bernhard Pruemmer */
+/* added by Bernhard Pruemmer, amended by DD */
 	if( strncmp( Inp, "protover", 8 ) == 0 )
 	{
-		puts("feature "
-           "myname=\"" ENGNAME " " VERSION "\" "
-           "analyze=1 "
+	   printf("feature myname=\"" ENGNAME " " );
+	   if(Flag.easy)
+	   { if(Flag.easy>=100) printf("NPS ");
+	     else printf("Easy ");
+	     printf("%i\"\n",Flag.easy);
+	   }
+	   else printf(VERSION"\"\n");
+
+           printf("feature analyze=1 "
            "setboard=1 "
            "sigint=1 "
            "time=1 "
            "draw=0 "
+           "ping=1 \n"
            );
+	   puts("feature done=1");
 	   Flag.xboard=20; /* version 2 */
 	   Inp[0]='\0'; return 1;
 	}
@@ -1236,6 +1244,15 @@ int command(void)
 		Inp[0]='\0'; return 1;
 	}
 
+/* COMMAND: ping */
+	if( strncmp( Inp, "ping", 4 ) == 0 )
+	{
+		Inp[1]='o'; /* ping -> pong */
+		printf(Inp);
+		Inp[0]='\0'; return 1;
+	}
+
+
 /* COMMAND: time */
 	if( strncmp( Inp, "time ", 5 ) == 0 )
 	{
@@ -1296,8 +1313,8 @@ int command(void)
 	 || strncmp( Inp, "random\n", 7 ) == 0
 	 || strncmp( Inp, "noise ", 6 ) == 0
 	 || strncmp( Inp, "result ", 7 ) == 0
-	 || strncmp( Inp, "accepted\n", 9 ) == 0
-	 || strncmp( Inp, "rejected\n", 9 ) == 0
+	 || strncmp( Inp, "accepted", 8 ) == 0
+	 || strncmp( Inp, "rejected", 8 ) == 0
 	 || strncmp( Inp, ".\n", 2 ) == 0
 	 || strncmp( Inp, "?\n", 2 ) == 0
 	)
