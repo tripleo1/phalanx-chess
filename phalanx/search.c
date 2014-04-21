@@ -232,12 +232,16 @@ if( Counter < 20 || Bookout < 4 || Flag.analyze )
 {
 	int b;
 
-	if( Flag.easy && rand()%100 > Flag.easy+100-Counter*10 ) b = -1;
-	else b = bookmove( m, n );
+	if( Flag.easy && Flag.easy<100 && Counter>4
+	&& rand()%5000 < Counter*(150-Flag.easy) )
+		b = -1;
+	else
+		b = bookmove( m, n );
 
 	if( b != -1 )
 	{
-		/* PV[0][0] = m[b]; */
+		if( Flag.easy && Flag.easy<100 )
+			usleep( (rand()%10000) * (150-Flag.easy) );
 		Bookout = 0;
 		PV[0][1].from = 0;   /* dont start pondering */
 		m[b].value = 0;
