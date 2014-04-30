@@ -293,7 +293,7 @@ default: badoptions();
 if( Flag.easy )
 {
 	Flag.learn = 0; Flag.ponder = 0; SizeHT = 0;
-	if( Flag.nps==0 ) Flag.nps=500;
+	if( Flag.nps==0 ) Flag.nps = 500 - 3*Flag.easy;
 }
 
 if( SizeHT != 0 )
