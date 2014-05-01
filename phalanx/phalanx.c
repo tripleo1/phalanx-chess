@@ -296,6 +296,12 @@ if( Flag.easy )
 	if( Flag.nps==0 ) Flag.nps = 500 - 3*Flag.easy;
 }
 
+if( Flag.nps && Flag.cpu )
+{
+	Flag.cpu = 0;
+	printf("telluser ignored -c+, cannot be used with -n <nps>\n");
+}
+
 if( SizeHT != 0 )
 {
 	HT = calloc( SizeHT, sizeof(thashentry) );
