@@ -179,8 +179,8 @@ int l_iterate(void)
 		long t = ptime();
 		switch( EasyMove )
 		{
-			case 1:  return ( t <= T1 + T2/3 );
-			case 2:  return ( t <= T1 + T2/6 );
+			case 1:  return ( t <= T1 + T2/2 );
+			case 2:  return ( t <= T1 + T2/4 );
 			default:
 				 if( Flag.easy ) return ( t <= T1 + T2*2/3 );
 				 if( Turns==0 )
