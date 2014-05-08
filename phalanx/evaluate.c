@@ -35,7 +35,7 @@ unsigned * C; /* 64k entries of 4 bytes: 256kB */
 void blunder( tmove *m, int *n )
 {
 int i;
-int initp = Flag.easy;
+int initp = Flag.easy * 2 + 30;
 
 /* quick look (small Depth) makes blunders */
 initp -= Depth/10;
@@ -60,21 +60,21 @@ for( i=(*n)-1; i>=1 && (*n)>4; i-- )
 	{
 		/* the more valuable the captured piece,
 		 * the more likely we see the move. */
-		p -= 10 + Values[ m[i].in2 >> 4 ] / 50;
+		p -= 10 + Values[ m[i].in2 >> 4 ] / 20;
 
 		/* capture of last moved piece is spotted
 		 * + extra bonus for recapture */
 		if( m[i].to == G[Counter-1].m.to )
 		{
-			p -= 20 + Values[ m[i].in2 >> 4 ] / 50;
+			p -= 20 + Values[ m[i].in2 >> 4 ] / 30;
 			if( G[Counter-1].m.in2 ) p -= 20; /* recapture */
 		}
 
 		/* very short captures */
 		switch( dist[120*m[i].from+m[i].to].max )
 		{
-			case 0: case 1: p -= 30; break;
-	  		case 2: p -= 20; break;
+			case 0: case 1: p -= 80; break;
+	  		case 2: p -= 40; break;
 	  		case 3: p -= 10; break;
 		}
 	}

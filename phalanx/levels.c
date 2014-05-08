@@ -182,7 +182,8 @@ int l_iterate(void)
 			case 1:  return ( t <= T1 + T2/2 );
 			case 2:  return ( t <= T1 + T2/4 );
 			default:
-				 if( Flag.easy ) return ( t <= T1 + T2*2/3 );
+				 if( Depth<400 ) /* stabilize low nps levels */ 
+					return ( t <= T1 + T2*2/3 );
 				 if( Turns==0 )
 					return ( t <= T1 + T2 );
 				 else
