@@ -150,17 +150,16 @@ if( C==NULL ) { puts("cannot alloc static eval cache!"); exit(0); }
 }
 
 
-int psnl[MAXPLY];
-int devi[MAXPLY];
+tsearchnode S[MAXPLY];
 
 static inline int approx_eval(void)
 {
-psnl[Ply] = - psnl[Ply-1];
+S[Ply].psnl = - S[Ply-1].psnl;
 
-devi[Ply] = devi[Ply-1]*2/3 + abs(psnl[Ply])/8;
-if( G[Counter-1].m.in2 ) devi[Ply] += 60; else devi[Ply] += 40;
+S[Ply].devi = S[Ply-1].devi*2/3 + abs(S[Ply].psnl)/8;
+if( G[Counter-1].m.in2 ) S[Ply].devi += 60; else S[Ply].devi += 40;
 
-return G[Counter].mtrl - G[Counter].xmtrl + psnl[Ply];
+return G[Counter].mtrl - G[Counter].xmtrl + S[Ply].psnl;
 }
 
 
@@ -216,8 +215,8 @@ if( Bknow.prune ) *cc |= 0x00008000; else *cc &= (0xFFFFFFFF-0x00008000);
 }
 #endif
 
-psnl[Ply] = positional;
-devi[Ply] = 0;
+S[Ply].psnl = positional;
+S[Ply].devi = 0;
 
 #undef debug
 #ifdef debug
@@ -427,6 +426,7 @@ if( repetition(1) ) /* third rep. draw */
 if( SizeHT == 0 || Depth<0 ) t = NULL;
 else
 if( (t=seekHT()) != NULL )
+if( Age == t->age || Beta-Alpha == 1 )
 if( t->depth >= Depth || ( Depth<300 && abs(t->value)>CHECKMATE-1000 ) )
 {
 	int val = t->value;
@@ -464,7 +464,7 @@ printf("hit percentage = %lld.%02lld%%\n",good*100/all,good*10000/all%100);
 }
 #endif
 
-G[Counter].check = check = checktest(Color);
+S[Ply].check = check = checktest(Color);
 
 if( Depth>0 || check )
 {
@@ -535,6 +535,17 @@ if( Depth>0 || check )
 	}
 #endif
 
+
+/*
+if(    Depth<1500 && Depth>0
+    && Beta-Alpha==1 && !check
+    && result < Beta-P_VALUE-Depth )
+{
+	generate_legal_checks(m,&n);
+	if( n==0 ) { result=Alpha; goto end; }
+}
+else
+*/
 	generate_legal_moves(m,&n,check);
 
 	/** Return, if there is no legal move - checkmate or stalemate **/
@@ -556,7 +567,7 @@ if( Depth>0 || check )
 			else
 			if( Depth <= 200 ) newdch -= 20;
 
-			for( i=Counter-2; i>0 && G[i].check; i-=2 ) inrow++;
+			for( i=Ply-2; i>0 && S[i].check; i-=2 ) inrow++;
 			switch( inrow ) /* number of checks in row */
 			{
 				case 0: break;
@@ -684,7 +695,7 @@ else
 
 	result = approx_eval();
 
-	if( ( result < Beta+devi[Ply] && result > Alpha-devi[Ply] )
+	if( ( result < Beta+S[Ply].devi && result > Alpha-S[Ply].devi )
 	 || Totmat<=(B_VALUE+P_VALUE) )
 	result = static_eval();
 

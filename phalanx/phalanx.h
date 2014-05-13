@@ -71,19 +71,25 @@ typedef struct
 
 typedef struct
 {
+  int psnl;		/* positional evaluation */
+  int devi;		/* deviation to be used in lazy eval, 0 = true eval */
+  int check;		/* side to move is in check */
+} tsearchnode;
+
+typedef struct
+{
   tmove
 	m;
   unsigned
 	hashboard;
-  unsigned short
+  unsigned
 	rule50,		/* number of half-moves since last irreversible */
-	castling:8,	/* 4 castling flags: */
+	castling;	/* 4 castling flags: */
 			/*   white short, w. long, b. s., b. l. */
-	check:8;
-  short
+  int
 	mtrl,		/* material count of side on move */
 	xmtrl;		/* material count of opposite side */
-} tgamenode;      /* 12+12 bytes */
+} tgamenode;      /* 12+16 bytes */
 
 typedef struct
 {
