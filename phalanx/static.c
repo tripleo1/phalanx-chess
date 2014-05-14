@@ -736,8 +736,10 @@ for(;;)
 		er += bb*2;
 #ifdef SCORING
 		if( Scoring )
-		if(l==wl) printf(" (whi) bishop pair bonus = %i\n",bb);
-		else      printf(" (bla) bishop pair bonus = %i\n",bb);
+		{
+		  if(l==wl) printf(" (whi) bishop pair bonus = %i\n",bb);
+		  else      printf(" (bla) bishop pair bonus = %i\n",bb);
+		}
 #endif
 	}
 
@@ -795,10 +797,12 @@ for(;;)
 
 #ifdef SCORING
 			if( Scoring )
+			{
 				if(l==wl)
 				printf( " (whi) pawn center = %i\n", d );
 				else
 				printf( " (bla) pawn center = %i\n", d );
+			}
 #endif
 		}
 
@@ -858,12 +862,13 @@ for(;;)
 		}
 
 #ifdef SCORING
-		if( Scoring )
-			if(d!=0)
+		if( Scoring && d!=0 )
+		{
 			if(l==wl)
 			printf( " (whi) castling = %i\n", d );
 			else
 			printf( " (bla) castling = %i\n", d );
+		}
 #endif
 	}
 
@@ -897,10 +902,12 @@ for(;;)
 			mr += pen; er += pen;
 #ifdef SCORING
 			if( Scoring )
+			{
 				if(l==wl)
 				printf( " (whi) isolated pawn = %i\n", pen );
 				else
 				printf( " (bla) isolated pawn = %i\n", pen );
+			}
 #endif
 		}
 	}
@@ -1254,10 +1261,12 @@ printboard(); printf("%02i",sq); getchar();
 		mr += mrr; er += err;
 #ifdef SCORING
 		if( Scoring )
+		{
 			if(l==wl)
 			printf( " (whi) rook = %i,%i\n", mrr, err );
 			else
 			printf( " (bla) rook = %i,%i\n", mrr, err );
+		}
 #endif
 	}
 	break;
@@ -1285,10 +1294,12 @@ printboard(); printf("%02i",sq); getchar();
 
 #ifdef SCORING
 			if( Scoring )
+			{
 				if(l==wl)
 				printf( " (whi) strong bishop = %i\n", bonus );
 				else
 				printf( " (bla) strong bishop = %i\n", bonus );
+			}
 #endif
 
 			no_bishop_outpost:;
@@ -1350,10 +1361,12 @@ printboard(); printf("%02i",sq); getchar();
 
 #ifdef SCORING
 			if( Scoring )
+			{
 				if(l==wl)
 				printf( " (whi) strong knight = %i\n", bonus );
 				else
 				printf( " (bla) strong knight = %i\n", bonus );
+			}
 #endif
 
 			no_knight_outpost:;
@@ -1511,21 +1524,23 @@ midresult += (Bknow.khung-Wknow.khung) * 2;
 /*********** King danger */
 Wknow.khung -= Wknow.kshield/3;
 Bknow.khung -= Bknow.kshield/3;
+
+#define KSAFETY 1
 if( Wknow.khung > 1 )
 {
-	midresult -= Wknow.khung * Wknow.khung;
+	midresult -= Wknow.khung * Wknow.khung * KSAFETY;
 #ifdef SCORING
 	if( Scoring )
-	printf( " (whi) king safety = %i\n", Wknow.khung * Wknow.khung * -4 );
+	printf( " (whi) king safety = %i\n", Wknow.khung * Wknow.khung * -KSAFETY );
 #endif
 }
 
 if( Bknow.khung > 1 )
 {
-	midresult += Bknow.khung * Bknow.khung;
+	midresult += Bknow.khung * Bknow.khung * KSAFETY;
 #ifdef SCORING
 	if( Scoring )
-	printf( " (bla) king safety = %i\n", Bknow.khung * Bknow.khung * -4 );
+	printf( " (bla) king safety = %i\n", Bknow.khung * Bknow.khung * -KSAFETY );
 #endif
 }
 

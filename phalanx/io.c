@@ -1376,7 +1376,7 @@ puts("# (comment)");
 	}
 
 /* COMMAND: score */
-	if( strncmp( Inp, "score\n", 6 ) == 0 )
+	if( strncmp(Inp,"score\n",6) == 0 || strncmp(Inp,"s\n",2) == 0 )
 	{
 		Scoring = 1; Depth = 100;
 		printf("\n (stm) material = %i\n",
