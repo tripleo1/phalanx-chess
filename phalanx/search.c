@@ -95,7 +95,11 @@ for( i=0; i!=n; i++ )
 		update_PV( m[max], Ply );
 		Alpha = result;
 		if(Alpha>=Beta)
-		{ m[max].value = (CHECKMATE-5000)+Depth; return Alpha; }
+		{
+			if( i>0 ) slash_killers( m, i );
+			m[max].value = (CHECKMATE-5000)+Depth;
+			return Alpha;
+		}
 		maxi = i;
 	}
 	else if( i==0 && Depth>0 ) update_PV( m[max], Ply );

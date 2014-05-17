@@ -545,6 +545,7 @@ extern void wlearn(int,int);
 extern void init_killers(void);
 extern void write_killer( int, int );
 extern void add_killer( tmove *, int, thashentry * );
+extern void slash_killers( tmove *, int );
 
 #endif
 
