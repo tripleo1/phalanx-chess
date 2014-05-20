@@ -1240,22 +1240,6 @@ printboard(); printf("%02i",sq); getchar();
 		  }
 		}
 
-		{
-			static int bon[8] =
-			{ 5, 3, 1, -2, -2, -2, -2, -2 };
-			int b = bon[ xkdist[sq].min ];
-			if(b>0)
-			{
-				b += r;
-				if( know->qstorm || know->kstorm ) mrr += b;
-				if( b > 5 )
-				{
-					if( b > 8 ) xknow->khung += 2;
-					else         xknow->khung ++;
-				}
-			}
-		}
-
 		mrr += rmpb[sq];
 
 		mr += mrr; er += err;
