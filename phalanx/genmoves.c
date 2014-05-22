@@ -513,14 +513,11 @@ if( ! check )
 void lc( tmove *m, int *i )
 {
 
-if( Depth < -200 )
+if( Depth < -100 )
 {
 if( Values[ B[From]>>4 ] > Values[ B[To]>>4 ] )
 {
-  if( Color == BLACK )
-  { if( (P[To]&0x00FF) ) return; }
-  else
-  { if( (P[To]&0xFF00) ) return; }
+  if( attacktest(To,enemy(Color)) ) return;
 }
 }
 else
