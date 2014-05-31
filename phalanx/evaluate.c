@@ -159,6 +159,16 @@ S[Ply].psnl = - S[Ply-1].psnl;
 S[Ply].devi = S[Ply-1].devi*2/3 + abs(S[Ply].psnl)/8;
 if( G[Counter-1].m.in2 ) S[Ply].devi += 60; else S[Ply].devi += 40;
 
+/* pawn promotions should mostly trigger full static eval in the child node,
+ * and avoid the lazy one, otherwise the engine delays promotions due to
+ * the high bonus for the pawn on the 7th row. */
+if(
+	( G[Counter-1].m.in1 == WP && G[Counter-1].m.to >= A7 )
+	||
+	( G[Counter-1].m.in1 == BP && G[Counter-1].m.to <= H2 )
+  )
+	S[Ply].devi += 3*P_VALUE;
+
 return G[Counter].mtrl - G[Counter].xmtrl + S[Ply].psnl;
 }
 
