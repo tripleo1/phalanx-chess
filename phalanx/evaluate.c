@@ -472,6 +472,35 @@ if( Depth>0 || check )
 	if(Depth<=0) result = approx_eval();
 	else         result = static_eval();
 
+#define FORWARD_PRUNING
+#ifdef  FORWARD_PRUNING
+/*
+ * A simple forward pruning:
+ * The Depth is low and the static evaluation is over [Alpha plus margin]
+ * Our king is safe (khung<limit) and we don't have much hung material.
+ * Let's lift Alpha and prune if it gets >= Beta.
+ * This works quite fine for larger Depths than 200 (2 plies) as well, 
+ * tested with limit 600 on a set of positions and it's still finding
+ * everything and in a shorter time, but I'm keeping the depth limit
+ * conservative for now.
+ * This is similar to what the old Phalanx XXII had, except now
+ * we use the margin.
+ */
+	if(	!check
+		&& Depth < 200
+		&& (	Color==WHITE
+			?
+			( Wknow.hung<14 && Wknow.khung<6 )
+			:
+			( Bknow.hung<14 && Bknow.khung<6 )
+		   )
+	  )
+	{
+		int r = result - (P_VALUE+Depth)/10;
+		if( r>=Beta ) { PV[Ply][Ply].from=0; return Beta; }
+		if( r>Alpha ) Alpha=r;
+	}
+#endif /* FORWARD_PRUNING */
 
 #ifdef NULL_MOVE_PRUNING
 	if(
@@ -585,7 +614,7 @@ else
 				m[i].dch = newdch;
 		}
 		else  /* losing anyway */
-		{ int i; for( i=0; i!=n; i++ ) m[i].dch = 60; }
+		{ int i; for( i=0; i!=n; i++ ) m[i].dch = EXTENSION_BASE; }
 	}
 #endif
 
@@ -710,7 +739,6 @@ else
 	/* What to generate? Only captures or also safe checks? */
 	if(    G[Counter].mtrl-G[Counter].xmtrl < 400
 	    && Depth > -100
-	    && ( Color==WHITE ? ( Bknow.khung > 1 ) : ( Wknow.khung > 1 ) )
 	)
 		generate_legal_checks(m,&n);
 	else
