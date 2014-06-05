@@ -427,7 +427,20 @@ if( repetition(1) ) /* third rep. draw */
 		ext -= Ply*20;
 	}
 
-	return ext/10+DRAW;
+	/* Speculative drawscore
+	 * Human players sometimes play a wild sacrifice leading to unclear
+	 * lines, making sure they could achieve a repetition draw at least.
+	 * This is the same speculative heuristics:
+	 * Repetition draw is scored as a slight advantage to the side that
+	 * forced the repetition, ie. that had less extensions in the path,
+	 * that's why we count the cumulative extension above. The deeper
+	 * in the tree this happens, the higher speculative bonus we give,
+	 * that is the Ply*20 above. However, if the remaining Depth is large,
+	 * we pull the score back closer to the DRAW score, because with
+	 * the larger Depth we should be able to find something better
+	 * than draw.
+	 */
+	return DRAW + ext/(15+max(-5,Depth/10));
 }
 
 /********************************************************************
