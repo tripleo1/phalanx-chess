@@ -1532,7 +1532,7 @@ Wknow.prune = ( Wknow.hung < 10 && Wknow.khung < 2 );
 Bknow.prune = ( Bknow.hung < 10 && Bknow.khung < 2 );
 
 /**
-***   Trade down bonus
+***   Trade down bonus - when ahead in material, trade pieces, keep pawns
 **/
 {
 	int tbonus = ( G[Counter].mtrl - G[Counter].xmtrl );
@@ -1544,25 +1544,24 @@ Bknow.prune = ( Bknow.hung < 10 && Bknow.khung < 2 );
 
 		if( tbonus > 0 ) /* white stronger */
 		{
-			if( Wknow.p || tbonus>=(N_VALUE+P_VALUE) )
-			r = (   tbonus * Wknow.p
-			      - tbonus * (2*Bknow.q+Bknow.b+Bknow.r+Bknow.n)
-			    ) / 30;
+			tbonus = min(tbonus,N_VALUE) + 200;
+			if( Wknow.p || tbonus>=(N_VALUE+200) )
+			r = ( Wknow.p - 2*Bknow.q-Bknow.b-Bknow.r-Bknow.n )
+			    * tbonus / 50;
 			else /* white has no pawns! */
-			r = - tbonus / 2;
+			r = - tbonus / 4;
 		}
 		else             /* black stronger */
 		{
-			if( Bknow.p || tbonus<=(N_VALUE+P_VALUE) )
-			r = (   tbonus * Bknow.p
-			      - tbonus * (2*Wknow.q+Wknow.b+Wknow.r+Wknow.n)
-			    ) / 30;
+			tbonus = max(tbonus,-N_VALUE) - 200;
+			if( Bknow.p || tbonus<=-(N_VALUE+200) )
+			r = ( Bknow.p - 2*Wknow.q-Wknow.b-Wknow.r-Wknow.n )
+			    * tbonus / 50;
 			else
-			r = - tbonus / 2;
+			r = - tbonus / 4;
 		}
 
-		endresult += r;
-		midresult += r/2;
+		result += r;
 
 #ifdef SCORING
 		if( Scoring )
