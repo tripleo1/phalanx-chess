@@ -5,11 +5,11 @@ extern long Time;
 
 
 char Inp[256] = "\0";
-const char piece[7] =
+char piece[7] =
  { ' ', 'P', 'N', 'B', 'R', 'Q', 'K' };
-const char file[10] =
+char file[10] =
  { '<', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', '>' };
-const char row[12] =
+char row[12] =
  { '<', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '>' };
 
 tmove Pm[256];
