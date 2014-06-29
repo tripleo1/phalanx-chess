@@ -748,7 +748,7 @@ else
 	result = approx_eval();
 
 	if( ( result < Beta+S[Ply].devi && result > Alpha-S[Ply].devi )
-	 || Totmat<=(B_VALUE+P_VALUE) )
+	 || Totmat<=(B_VALUE+P_VALUE) || Ply<2 )
 	result = static_eval();
 
 	if( result >= Beta ) return result;
