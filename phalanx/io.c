@@ -264,10 +264,10 @@ switch( m.special )
   case SHORT_CASTLING: printf("O-O"); return;
 }
 
-printf( "%c%c%c%c%c",
+printf( "%c%c%c%c",
 	file[m.from%10], row[m.from/10],
-	file[m.to%10], row[m.to/10],
-	m.in2a == m.in1 ? ' ' : tolower(piece[m.in2a>>4]) );
+	file[m.to%10], row[m.to/10] );
+if ( m.in2a != m.in1 ) printf( "%c", tolower(piece[m.in2a>>4]) );
 
 }
 
