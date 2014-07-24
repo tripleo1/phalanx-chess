@@ -35,7 +35,7 @@ unsigned * C; /* 64k entries of 4 bytes: 256kB */
 void blunder( tmove *m, int *n )
 {
 int i;
-int initp = Flag.easy * 2 + 30;
+int initp = Flag.easy * 3 + 100;
 
 /* quick look (small Depth) makes blunders */
 initp -= Depth/10;
@@ -73,9 +73,9 @@ for( i=(*n)-1; i>=1 && (*n)>4; i-- )
 		/* very short captures */
 		switch( dist[120*m[i].from+m[i].to].max )
 		{
-			case 0: case 1: p -= 80; break;
-	  		case 2: p -= 40; break;
-	  		case 3: p -= 10; break;
+			case 0: case 1: p -= 120; break;
+	  		case 2: p -= 80; break;
+	  		case 3: p -= 30; break;
 		}
 	}
 	else /* noncaptures - prune or reduce with power table info */
