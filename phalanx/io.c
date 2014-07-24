@@ -1554,8 +1554,11 @@ puts("# (comment)");
 		{ tmove *sd = sandex(Inp,m,n); if(sd!=NULL) i=sd-m; else i=n; }
 		if( i != n )
 		{
-			printf("\nyour move is ");
-			printm( m[i], NULL ); puts("");
+			if( Flag.xboard < 2 )
+			{
+				printf("\nyour move is ");
+				printm( m[i], NULL ); puts("");
+			}
 			do_move( m+i );
 			switch( terminal() )
 			{
@@ -1630,15 +1633,13 @@ while( command() )
 				}
 			}
 
-			if( Flag.xboard >= 20 )
-			{ printf("move "); gnuprintm(m); printf("\n"); }
-			else
-			  {
-			  printf("my move is "); printm( m, NULL );
-
-			  if( Flag.xboard>0 )
-			  { printf("\n%i. ... ",(Counter+1)/2); gnuprintm(m); }
-			  puts("");
+			if( Flag.xboard < 2 )
+			{
+				printf("my move is "); printm( m, NULL ); puts("");
+			}
+			if( Flag.xboard > 0 )
+			{
+				printf("move "); gnuprintm(m); puts("");
 			}
 
 			switch( ( ter = terminal() ) )
