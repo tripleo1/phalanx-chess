@@ -282,7 +282,7 @@ else
 
 	FollowPV = 1;
 	NoAbort = 0;
-	if(Flag.nps<=500) Depth=90; else Depth = 290;
+	if(Flag.nps<=1000) Depth=190; else Depth = 290;
 	Ply = 0;
 	A_d = Depth/100;
 
