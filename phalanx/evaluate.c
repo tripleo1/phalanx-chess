@@ -38,7 +38,7 @@ int i;
 int initp = Flag.easy * 3 + 100;
 
 /* quick look (small Depth) makes blunders */
-initp -= Depth/10;
+initp -= Depth/5;
 
 /* full board means more blunders */
 initp += (G[Counter].mtrl+G[Counter].xmtrl) / 200;
@@ -51,31 +51,37 @@ for( i=(*n)-1; i>=1 && (*n)>4; i-- )
 
 	/* missing PV moves is unlikely */
 	if( m[i].from==PV[0][Ply].from && m[i].to==PV[0][Ply].to )
-	p -= 100;
+	p -= 200;
 
 	if( m[i].from==PV[Ply-1][Ply].from && m[i].to==PV[Ply-1][Ply].to )
-	p -= 100;
+	p -= 200;
 
 	if( m[i].in2 ) /* captures - we tend to see this */
 	{
 		/* the more valuable the captured piece,
 		 * the more likely we see the move. */
-		p -= 10 + Values[ m[i].in2 >> 4 ] / 20;
+		p -= 20 + Values[ m[i].in2 >> 4 ] / 20;
 
 		/* capture of last moved piece is spotted
 		 * + extra bonus for recapture */
 		if( m[i].to == G[Counter-1].m.to )
 		{
 			p -= 20 + Values[ m[i].in2 >> 4 ] / 30;
-			if( G[Counter-1].m.in2 ) p -= 20; /* recapture */
+			if( G[Counter-1].m.in2 ) p -= 40; /* recapture */
 		}
 
 		/* very short captures */
 		switch( dist[120*m[i].from+m[i].to].max )
 		{
+<<<<<<< .mine
+			case 0: case 1: p -= 180; break;
+	  		case 2: p -= 80; break;
+	  		case 3: p -= 20; break;
+=======
 			case 0: case 1: p -= 120; break;
 	  		case 2: p -= 80; break;
 	  		case 3: p -= 30; break;
+>>>>>>> .r77
 		}
 	}
 	else /* noncaptures - prune or reduce with power table info */
@@ -112,7 +118,7 @@ for( i=(*n)-1; i>=1 && (*n)>4; i-- )
 
 	/* We focus on the piece that moved 2 plies ago and see the
 	 * moves of the same piece */
-	if( m[i].from == G[Counter-2].m.to ) p -= 25;
+	if( m[i].from == G[Counter-2].m.to ) p -= 55;
 
 	/* underpromotions? too precise! */
 	if( m[i].in1 != m[i].in2a  &&  piece(m[i].in2a) != QUEEN )
