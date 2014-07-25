@@ -73,15 +73,9 @@ for( i=(*n)-1; i>=1 && (*n)>4; i-- )
 		/* very short captures */
 		switch( dist[120*m[i].from+m[i].to].max )
 		{
-<<<<<<< .mine
 			case 0: case 1: p -= 180; break;
 	  		case 2: p -= 80; break;
 	  		case 3: p -= 20; break;
-=======
-			case 0: case 1: p -= 120; break;
-	  		case 2: p -= 80; break;
-	  		case 3: p -= 30; break;
->>>>>>> .r77
 		}
 	}
 	else /* noncaptures - prune or reduce with power table info */
