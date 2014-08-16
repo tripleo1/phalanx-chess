@@ -62,8 +62,6 @@ L[L[1].next].next = L[L[2].next].next = 0;
 	}
 }
 
-Flag.machine_color = enemy(Color);
-
 }
 
 
@@ -1457,6 +1455,7 @@ puts("# (comment)");
 	{
 		if (setfen(Inp+9))
                    setfen(initialpos);
+		if(Flag.analyze) Flag.machine_color=3;
 		Inp[0] = '\0';
 		return 1;
 	}
