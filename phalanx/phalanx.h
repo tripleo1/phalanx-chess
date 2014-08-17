@@ -464,8 +464,8 @@ extern int Bookout;
 
 /* params that cannot be pushed thru SIGALM handler, */
 /* must be pushed thru global variables */
-extern int A_n, A_i, A_d;
-extern tmove * A_m;
+extern volatile int A_n, A_i, A_d;
+extern volatile tmove * A_m;
 
 
 
@@ -485,7 +485,7 @@ extern void printm(tmove,char*);
 extern void printmSAN( tmove*, int, int, char* );
 extern void printPV(int,int,char*);
 extern void infoline(int,char*);
-extern void verboseline(tmove*,int,int);
+extern void verboseline(void);
 extern void printboard(char*);
 extern int setfen(const char*);
 extern void shell(void);

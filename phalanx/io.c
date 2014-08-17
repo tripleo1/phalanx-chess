@@ -626,23 +626,38 @@ else
 
 
 
-void verboseline( tmove* m, int i, int n )
+void verboseline( void )
 {
 	char s[256];
 	int j;
 	extern long T1;
-	long t = (long) (ptime()-T1) / 100;
+	long t = (long) (ptime()-T1);
 
-	sprintf( s, "(%2i)", A_d );
-	sprintf( s+strlen(s), "   ");
-	sprintf( s+strlen(s), "%3li:%02li   ", t/60, t%60 );
-	sprintf( s+strlen(s), "%9lli  ", Nodes );
-	sprintf( s+strlen(s), "(%2i/%2i) ", i+1, n );
-	printm( m[i], s+strlen(s) );
-	sprintf( s+strlen(s), "     " );
-	for( j=0; j!=79; j++ ) sprintf( s+strlen(s), "" );
-
-	printf("%s",s);
+	if( Flag.xboard==0 )
+	{
+		t /= 100; /* seconds elapsed */
+		sprintf( s, "(%2i)", A_d );
+		sprintf( s+strlen(s), "   ");
+		sprintf( s+strlen(s), "%3li:%02li   ", t/60, t%60 );
+		sprintf( s+strlen(s), "%9lli  ", Nodes );
+		sprintf( s+strlen(s), "(%2i/%2i) ", A_i+1, A_n );
+		printm( A_m[A_i], s+strlen(s) );
+		sprintf( s+strlen(s), "     " );
+		for( j=0; j!=79; j++ ) sprintf( s+strlen(s), "" );
+		printf("%s",s);
+	}
+	else
+	{
+		sprintf( s, "stat01: %li %li %i %i %i ",
+		                 t, /* time elapsed in centiseconds */
+		                     (long) Nodes,
+		                         A_d, /* A_d breaks Arena */
+		                            A_n - A_i - 1,
+		                               A_n
+		);
+		printf("%s",s);
+		gnuprintm(A_m[A_i]); puts("");
+	}
 }
 
 
@@ -1053,9 +1068,14 @@ void interrupt(int x)
 
 	if( Flag.polling )
 	{
-	/* ignore lines that begin with '.' */
-	c=getc(stdin); ungetc(c,stdin);
-	if( c=='.' ) { fgets(Inp,255,stdin); goto go_on; }
+		/* ignore lines that begin with '.' */
+		c=getc(stdin); ungetc(c,stdin);
+		if( c=='.' )
+		{
+			fgets(Inp,255,stdin);
+			verboseline();
+			goto go_on;
+		}
 	}
 
 	if( Flag.ponder < 2 )

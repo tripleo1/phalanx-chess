@@ -327,7 +327,7 @@ if( ( Nodes % timeslice ) == 0 && !Flag.analyze )
 
 		lptime = nptime;
 
-		if( Flag.post && !Flag.xboard ) verboseline( A_m, A_i, A_n );
+		if( Flag.post && !Flag.xboard ) verboseline();
 
 if(Flag.polling)
 {

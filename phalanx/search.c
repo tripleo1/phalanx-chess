@@ -301,7 +301,7 @@ else
 		Beta = CHECKMATE;
 		Alpha = -CHECKMATE;
 
-		if( Flag.post && ! Flag.xboard ) verboseline( m, 0, n );
+		if( Flag.post && ! Flag.xboard ) verboseline();
 
 		for( i=0; i!=n; i++ )
 		{
