@@ -442,7 +442,7 @@ extern int N_moves[8], RB_dirs[8];
 #define K_moves RB_dirs
 
 extern int Values[7];            /* piece values */
-extern unsigned short P[120];      /* power table */
+extern unsigned P[120];
 
 extern tmove PV[MAXPLY][MAXPLY];   /* principal variantion */
 extern tmove Pondermove;

@@ -203,7 +203,7 @@ int R_mobi[16] =
  { -9, -5, -2, 0, 2, 4, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6 };
 
 /* power table */
-unsigned short P[120];
+unsigned P[120];
 
 int *pf, *xpf, wpf[10], bpf[10]; /* # of w&b pawns on a file */
 
@@ -328,7 +328,7 @@ for(i=0;i!=10;i++) wpf[i]=bpf[i]=0;
 
 memset( &Wknow, 0, sizeof(tknow) );
 memset( &Bknow, 0, sizeof(tknow) );
-memset( P, 0, 120*sizeof(short) );
+memset( P+20, 0, 80*sizeof(unsigned) );
 
 Wknow.kp = WKP; Wknow.worsebm = 100;
 Wknow.lpf = 9;
