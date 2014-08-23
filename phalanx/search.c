@@ -308,6 +308,7 @@ else
 			int64 lastnodes = Nodes;
 			A_i = i;
 
+			if( Flag.post && Flag.xboard!=1 ) verboseline();
 
 			if( i == 0 )
 			{
