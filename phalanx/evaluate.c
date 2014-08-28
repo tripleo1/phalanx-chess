@@ -35,7 +35,7 @@ unsigned * C; /* 64k entries of 4 bytes: 256kB */
 void blunder( tmove *m, int *n )
 {
 int i;
-int initp = Flag.easy * 3 + 100;
+int initp = Flag.easy * 4 + 150;
 
 /* quick look (small Depth) makes blunders */
 initp -= Depth/5;
@@ -56,6 +56,12 @@ for( i=(*n)-1; i>=1 && (*n)>4; i-- )
 	if( m[i].from==PV[Ply-1][Ply].from && m[i].to==PV[Ply-1][Ply].to )
 	p -= 200;
 
+	/* target square far from the center is more difficult to spot */
+	p += 2*dist[120*E4+m[i].to].taxi + dist[120*E4+m[i].to].max +
+	   + 2*dist[120*D5+m[i].to].taxi + dist[120*D5+m[i].to].max
+	/* so is target square far from previous opponents move */
+	   + 2*dist[120*G[Counter-1].m.to+m[i].to].taxi;
+
 	if( m[i].in2 ) /* captures - we tend to see this */
 	{
 		/* the more valuable the captured piece,
@@ -73,9 +79,9 @@ for( i=(*n)-1; i>=1 && (*n)>4; i-- )
 		/* very short captures */
 		switch( dist[120*m[i].from+m[i].to].max )
 		{
-			case 0: case 1: p -= 180; break;
-	  		case 2: p -= 80; break;
-	  		case 3: p -= 20; break;
+			case 0: case 1: p -= 250; break;
+	  		case 2: p -= 150; break;
+	  		case 3: p -= 50; break;
 		}
 	}
 	else /* noncaptures - prune or reduce with power table info */
