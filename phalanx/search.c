@@ -301,14 +301,12 @@ else
 		Beta = CHECKMATE;
 		Alpha = -CHECKMATE;
 
-		if( Flag.post && ! Flag.xboard ) verboseline();
+		if( Flag.post && Flag.xboard!=1 ) { A_i=0; verboseline(); }
 
 		for( i=0; i!=n; i++ )
 		{
 			int64 lastnodes = Nodes;
 			A_i = i;
-
-			if( Flag.post && Flag.xboard!=1 ) verboseline();
 
 			if( i == 0 )
 			{
