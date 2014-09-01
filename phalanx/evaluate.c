@@ -533,7 +533,7 @@ if( Depth>0 || check )
 
 #ifdef NULL_MOVE_PRUNING
 	if(
-		result+100 >= Beta
+		Depth > 100
 		&& ( result >= Beta || Depth > NULL_MOVE_PRUNING )
 		&& ! FollowPV
 		&& ! check
