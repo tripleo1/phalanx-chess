@@ -1,7 +1,10 @@
 
 ####### choose the line that makes the binary faster on your machine
 # CFLAGS = -O3 -Wall -fomit-frame-pointer -funroll-loops
-CFLAGS = -O3 -Wall -fomit-frame-pointer --std=gnu89 -D_GNU_SOURCE
+CFLAGS = -O3 -Wall -mtune=native --std=gnu89 -D_GNU_SOURCE
+# CFLAGS = -fprofile-generate -mtune=native -O3 -Wall --std=gnu89 -D_GNU_SOURCE
+# CFLAGS = -fprofile-use -mtune=native -O3 -Wall --std=gnu89 -D_GNU_SOURCE
+# CFLAGS = -O3 -Wall -fomit-frame-pointer --std=gnu89 -D_GNU_SOURCE
 # -std=c99 
 #-Werror removed
 
@@ -25,7 +28,7 @@ LDFLAGS =
 
 OBJ = .o/phalanx.o .o/bcreate.o .o/search.o .o/io.o .o/data.o \
       .o/evaluate.o .o/genmoves.o .o/moving.o .o/hash.o .o/static.o \
-      .o/levels.o .o/book.o .o/killers.o .o/endgame.o .o/learn.o
+      .o/levels.o .o/book.o .o/killers.o .o/endgame.o .o/learn.o .o/easy.o
 
 phalanx: .o $(OBJ)
 	$(CC) $(CFLAGS) $(DEFINES) $(LDFLAGS) $(OBJ) -o phalanx

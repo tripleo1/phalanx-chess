@@ -509,6 +509,7 @@ extern tmove root_search(void);
 extern int repetition(int);
 extern int material_draw(void);
 extern int evaluate(int,int);
+extern void blunder(tmove*,int*);
 
 extern int score_position(void);
 
