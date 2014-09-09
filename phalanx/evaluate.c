@@ -422,7 +422,7 @@ if( Depth>0 || check )
 		&& ( result >= Beta || Depth > NULL_MOVE_PRUNING )
 		&& ! FollowPV
 		&& ! check
-		&& G[Counter].mtrl > Q_VALUE+B_VALUE        /* zugzwang fix */
+		&& G[Counter].mtrl > 8*P_VALUE        /* zugzwang fix */
 /*		&& G[Counter-1].m.special != NULL_MOVE */  /* prev. node not nullm */
 		&& ( t==NULL || t->depth <= Depth-NULL_MOVE_PRUNING
 		  || t->result==beta_cut || t->value >= Beta )
