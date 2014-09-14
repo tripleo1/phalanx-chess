@@ -104,16 +104,24 @@ COMMAND LINE OPTIONS
     -b <+/->  opening book                        default: on
     -l <+/->  learning on/off                     default: on
     -r <resign value in centipawns>               default: 0 (no resigning)
-    -e <easy level 0...99>                       default: 0 (best play)
+    -e <easy level 0...99>                        default: 0 (best play)
        1 is the easiest and 99 is the hardest easy level. Phalanx tries to
-       emulate human-like blunders, the lower the number the more blunders it
+       emulate human-like blunders, the higher the number the more blunders it
        plays. It also adds more randomness with the easy levels, repeating
        games should be impossible. Easy levels set hashtable size to zero,
        pondering and learning to off. Since version XXIII, Phalanx uses
        the time normally, it does not respond immediatelly. NPS is lowered
-       to 100-300, the speed of the machine does not matter here, it uses
-       usleep() during the search, so it does not raise the machine load.
+       to 100-300, unless overriden by the -n agrument. Root moves randomizing
+       is used here as well, between 10 to 60 centipawns, unless overriden
+       by the -z argument.
+    -z <random evaluation in centipawns>          default: 0 (best play)
+       Randomize play. Add pseudo-random values to root moves evaluations.
+       The numeric value limits the random range, the interval of random
+       evaluations to be added is [-N/2 ... N/2].
     -n <nodes per second>                         default: 0 (no limit)
+       Limits the speed to weaken the engine and to use less resources: The
+       speed of the machine does not matter here, it uses usleep() during
+       the search, so with low NPS it does not raise the machine load.
     -v
        Print version and exit.
     -P <primary book directory>

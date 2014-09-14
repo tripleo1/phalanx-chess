@@ -189,6 +189,7 @@ tmove root_search( void )
 {
 
 tmove m[256];
+int rr[256];
 int n, i;
 int Alpha, Beta;
 int r;
@@ -280,6 +281,18 @@ else
 
 	if( EasyMove == 3 && ! Flag.analyze ) { do_move(m); return m[0]; }
 
+	/* randomize root moves */
+	if( Flag.random )
+	for( i=0; i!=n; i++ )
+	{
+		rr[i] = rand()%(Flag.random+1) - Flag.random/2;
+/*
+		printf("%4i:",rr[i]); printm(m[i],NULL);
+		if(i%5==4) printf("\n");
+*/
+	}
+	else for( i=0; i!=n; i++ ) rr[i]=0;
+
 	FollowPV = 1;
 	NoAbort = 0;
 	if(Flag.nps<=1000) Depth=190; else Depth = 290;
@@ -311,7 +324,8 @@ else
 			if( i == 0 )
 			{
 				do_move(m+i);
-				r = - evaluate( -Beta, -Alpha );
+				r = - evaluate( -Beta+rr[i], -Alpha+rr[i] )
+				    + rr[i];
 				undo_move(m+i);
 
 				if(!Abort)
@@ -324,7 +338,7 @@ else
 			else
 			{
 				do_move(m+i);
-				r = - evaluate( -Alpha-1, -Alpha );
+				r = - evaluate( -Alpha-1+rr[i], -Alpha+rr[i] )+rr[i];
 				undo_move(m+i);
 
 				if(!Abort) m[i].value = r;
@@ -343,7 +357,7 @@ else
 				      }
 				      if( Flag.post ) infoline(2,NULL);
 				      do_move(m+i);
-				      r = - evaluate( -Beta, -Alpha );
+				      r = - evaluate( -Beta+rr[i], -Alpha+rr[i] )+rr[i];
 				      undo_move(m+i);
 				      if(!Abort)
 				      {
@@ -355,21 +369,25 @@ else
 					{
 					int j, ipom = Nod[i] = Nodes-lastnodes;
 					tmove pom = m[i];
+					int rrr=rr[i];
 					for( j=i; j>0; j-- )
-					{ m[j] = m[j-1]; Nod[j] = Nod[j-1]; }
-					m[j] = pom; Nod[j] = ipom;
+					{ m[j] = m[j-1]; Nod[j] = Nod[j-1];
+					  rr[j] = rr[j-1]; }
+					m[j] = pom; Nod[j] = ipom; rr[j]=rrr;
 					}
 
 				}
 				else /* no turn, bubble up by nodes searched */
 				{
 				  int j; int64 ipom; tmove pom;
+				  int rrr=rr[i];
 				  ipom = Nod[i] = Nodes-lastnodes;
 				  /* bubble up */
 				  pom = m[i];
 				  for( j=i; j>bgs+1 && ipom>Nod[j-1]; j-- )
-				  { m[j] = m[j-1]; Nod[j] = Nod[j-1]; }
-				  m[j] = pom; Nod[j] = ipom;
+				  { m[j] = m[j-1]; Nod[j] = Nod[j-1];
+				    rr[j]=rr[j-1]; }
+				  m[j] = pom; Nod[j] = ipom; rr[j]=rrr;
 				}
 			}
 
@@ -388,6 +406,13 @@ else
 		if( Flag.post ) infoline(3,NULL);
 		Depth += 100;
 		FollowPV = 1;
+
+		/* Fix some misbehaviour of root moves randomness when
+		 * close to game end. */
+		if( Flag.random && G[Counter].mtrl <= Q_VALUE+R_VALUE )
+			for( i=0; i!=n; i++ )
+				if( abs(Alpha)>29990 ) rr[i]=0;
+				else rr[i]/=2;
 
 		if( abs(Alpha) > 29000 )
 		{

@@ -152,6 +152,7 @@ typedef struct
   tlevel level;
   int nps;
   int easy;
+  int random;
   FILE	* log;
 } tflag;
 
