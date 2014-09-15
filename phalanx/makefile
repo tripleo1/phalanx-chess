@@ -33,7 +33,7 @@ OBJ = .o/phalanx.o .o/bcreate.o .o/search.o .o/io.o .o/data.o \
 phalanx: .o $(OBJ)
 	$(CC) $(CFLAGS) $(DEFINES) $(LDFLAGS) $(OBJ) -o phalanx
 
-.o/%.o: makefile %.c
+.o/%.o: makefile phalanx.h %.c
 	$(CC) $(CFLAGS) $(DEFINES) -c $*.c -o .o/$*.o
 
 .o:
