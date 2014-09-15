@@ -52,6 +52,11 @@ typedef unsigned char tsquare;
 /*** Moves are generated into and executed from struct tmove ***/
 typedef struct
 {
+  short
+	value;		/* heuristic value - the order key - before search */
+			/* value returned - after search */
+  short
+	dch;		/* depth change -100...100 */
   unsigned char
 	from,		/* square */
 	to,		/* destination square */
@@ -60,13 +65,6 @@ typedef struct
 	in1,		/* moving piece */
 	in2,		/* captured piece or 0 */
 	in2a;		/* moving piece or promoted piece */
-  signed short
-	value;		/* heuristic value - the order key - before search */
-			/* value returned - after search */
-  short
-	dch;		/* depth change -100...100 */
-  short
-	shift;		/* alphabeta window shift at root search */
 } tmove;          /* 12 bytes */
 
 typedef struct
