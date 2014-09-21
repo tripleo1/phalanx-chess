@@ -350,18 +350,13 @@ if( t->depth >= Depth || ( Depth<300 && abs(t->value)>CHECKMATE-1000 ) )
 	switch( t->result )
 	{
 	case no_cut:                    /* `true value', good_score */
-		PV[Ply][Ply].from=0;
-		return val;
+		PV[Ply][Ply].from=0; return val;
 	break;
 	case alpha_cut:                 /* `this or less', failed_low */
-		if( val <= Alpha )
-		{ PV[Ply][Ply].from=0; return Alpha; }
-		if( val < Beta ) Beta = val;
+		if( val <= Alpha ) { PV[Ply][Ply].from=0; return Alpha; }
 	break;
 	case beta_cut:                  /* `this or more', failed_high */
-		if( val >= Beta )
-		{ PV[Ply][Ply].from=0; return Beta; }
-		if( val > Alpha ) Alpha = val;
+		if( val >= Beta ) { PV[Ply][Ply].from=0; return Beta; }
 	break;
 	}
 }
