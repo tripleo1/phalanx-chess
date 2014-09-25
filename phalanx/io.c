@@ -141,6 +141,7 @@ switch( m.special )
 {
   case LONG_CASTLING:  sprintf( ss, "O-O-O  " ); goto endprint;
   case SHORT_CASTLING: sprintf( ss, "O-O  " ); goto endprint;
+  case NULL_MOVE: sprintf( ss, "NULLMOV "); goto endprint;
 }
 
 sprintf( ss, "%c%c%c%c%c%c", piece[m.in1>>4],
@@ -176,6 +177,7 @@ switch( mi->special )
 {
   case LONG_CASTLING:  sprintf( ss, "O-O-O" ); goto endprint;
   case SHORT_CASTLING: sprintf( ss, "O-O" ); goto endprint;
+  case NULL_MOVE: sprintf( ss, "NULLM"); goto endprint;
 }
 
 if( piece(mi->in1) == PAWN )
