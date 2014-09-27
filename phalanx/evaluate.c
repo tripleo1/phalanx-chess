@@ -418,16 +418,13 @@ if( Depth>0 || check )
 		&& ! FollowPV
 		&& ! check
 		&& G[Counter].mtrl > 8*P_VALUE        /* zugzwang fix */
-/*		&& G[Counter-1].m.special != NULL_MOVE */  /* prev. node not nullm */
+		&& G[Counter-1].m.special != NULL_MOVE   /* prev. node not nullm */
 		&& ( t==NULL || t->depth <= Depth-NULL_MOVE_PRUNING
 		  || t->result==beta_cut || t->value >= Beta )
 	)
 	{
 		int value;
 		int olddepth = Depth;
-		int alpha = -Beta;
-
-		tmove m[256]; int n;  /* moves and number of moves */
 
 		G[Counter].m.in1 = 0; /* disable en passant */
 		G[Counter].m.special = NULL_MOVE;
@@ -442,27 +439,9 @@ if( Depth>0 || check )
 		Color = enemy(Color);
 
 		Depth -= NULL_MOVE_PRUNING;
-		if( Depth <= 0 )
-		{
-			Depth = 0;
-#ifdef QCAPSONLY
-			generate_legal_captures(m,&n,0);
-#else
-			generate_legal_checks(m,&n);
-#endif
-		}
-		else
-		{
-			generate_legal_moves( m, &n, 0 );
-		}
 
-		if( n!=0 )
-		{
-			add_killer( m, n, NULL );
-			value = -search( m, n, alpha, alpha+1 );
-		}
-		else
-		{ if(Depth!=0) value=Alpha; else value=result; }
+		if(Depth<0) Depth=0; /* else Depth -= Depth/4; */
+		value = -evaluate(-Beta, -Beta+1);
 
 		Color = enemy(Color);
 		Counter --; Ply --;
