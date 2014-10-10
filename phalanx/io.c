@@ -1511,6 +1511,7 @@ puts("# (comment)");
 			tmove m;
 			int i;
 
+			memset( HT, 0, SizeHT*sizeof(thashentry) );
 			printf("\n%s",Inp);
 			m = root_search();
 			Flag.machine_color = 0;
