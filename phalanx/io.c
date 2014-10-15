@@ -144,7 +144,10 @@ switch( m.special )
   case NULL_MOVE: sprintf( ss, "NULLMOV "); goto endprint;
 }
 
-sprintf( ss, "%c%c%c%c%c%c", piece[m.in1>>4],
+if( m.in1 != WP && m.in1 != BP ) sprintf( ss, "%c", piece[m.in1>>4] );
+else ss[0]='\0';
+
+sprintf( ss+strlen(ss), "%c%c%c%c%c",
 	file[m.from%10], row[m.from/10],
 	( m.in2 || m.special ) ? 'x' : '-',
 	file[m.to%10], row[m.to/10] );
