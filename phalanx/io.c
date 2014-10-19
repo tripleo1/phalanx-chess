@@ -1119,7 +1119,11 @@ int command(void)
 	}
 
 	if( Inp[0] == '\0' )
-	if( fgets(Inp,255,stdin) == NULL ) strcpy(Inp,"quit\n");
+	{
+		if( fgets(Inp,255,stdin) == NULL ) strcpy(Inp,"quit\n");
+		else if( Flag.log != NULL )
+			fprintf(Flag.log, "stdin: %s", Inp);
+	}
 
 	if( strncmp(Inp,"exit",4) == 0 && Flag.analyze )
 	{ Flag.machine_color = Flag.analyze = 0; Inp[0]='\0'; return 1; }
