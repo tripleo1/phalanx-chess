@@ -275,8 +275,18 @@ XXII      Better ICS whispering, it sends only one info per move.  Bugfix in
           and sizes of the opening books.  Bugfix in benchmark, the resulting
           number was incorrect on machines that can do over 70kNps.
 
-XXIII     New -n commandline option to limit nodes per second. Easy levels now
-          don't play instantly, but use time. Simplified rootsearch. Search
-          stability fixes. XBoard protocol version 2. DrawScore adjusted in
-          endgames to avoid playing dead draws like KR-KR. Bugfixes.
+XXIII     Xboard protocol version 2 compatibility, including the periodic
+20141020  updates feature.  New -n commandline option to limit nodes per
+          second.  New -z commandline option to randomize root moves.  Easy
+          levels now don't play instantly, but use time.  DrawScore (contempt
+          factor) adjusted in endgames towards positive values to avoid playing
+          dead draws like KRKR.  Minor engine fixes: Simplified rootsearch,
+          the aspiration window implementation was not good, for now replaced
+          with standard PVS.  Temporarily disabled static eval cache as the
+          implementation was not correct.  Other minor bugfixes.
+          Known issues: Warnings in io.c.  Command 'setboard' moves the Counter
+          variable, which then cripples the 'history' command output.  Command
+          'setboard' chokes on unexpected input.  These issues are only
+          apparent in commandline and should never occur via a GUI - leaving
+          the fix to a future release.
 
