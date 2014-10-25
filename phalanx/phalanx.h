@@ -2,7 +2,7 @@
 #define PHALANX_INCLUDED
 
 #define ENGNAME "Phalanx"
-#define VERSION "XXIII"
+#define VERSION "XXIII+"
 
 #ifdef GNUFUN
 # include <getopt.h>

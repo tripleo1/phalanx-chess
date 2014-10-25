@@ -1152,6 +1152,7 @@ int command(void)
            "setboard=1 "
            "sigint=1 "
            "time=1 "
+           "memory=1 "
            "draw=0 "
            "ping=1 \n"
            );
@@ -1365,6 +1366,50 @@ int command(void)
 		Flag.level = fixeddepth;
 
 		printf("search depth %i\n", Flag.depth/100 );
+		Inp[0]='\0'; return 1;
+	}
+
+/* COMMAND: memory N */
+	if( strncmp( Inp, "memory", 6 ) == 0 )
+	{
+		int newsize;
+		thashentry * newHT;
+
+		if( Inp[6] == '\n' )
+		{ printf("memory in MB> "); scanf( "%i", &newsize ); }
+		else
+		{ sscanf( &Inp[7],"%i",&newsize); }
+/*
+printf("telluser Phalanx hashtable %i MB, ", newsize );
+*/
+		if( newsize == 1 )
+			/* 1 MB requested, we use small HT */
+			newsize = 70000;
+		else
+		{
+			if( newsize <= 0 ) newsize = 0;
+			else /* newsize >= 2MB */
+			/* memory is in megabytes. we substract one megabyte
+			 * for other data structures */
+			newsize = ((newsize-1)*(1024*1024))/sizeof(thashentry);
+		}
+/*
+printf("%i entries\n",newsize);
+*/
+		if( newsize == 0 )
+		{
+			free(HT);
+			SizeHT=0; HT=NULL;
+		}
+		else
+		{
+			newHT = realloc( HT, newsize*sizeof(thashentry) );
+			if( newHT != NULL )
+			{
+				HT = newHT; SizeHT = newsize;
+				memset( HT, 0, SizeHT*sizeof(thashentry) );
+			}
+		}
 		Inp[0]='\0'; return 1;
 	}
 
