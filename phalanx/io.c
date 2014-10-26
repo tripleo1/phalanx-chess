@@ -79,7 +79,7 @@ s[0] = '@';
 
 for(;;)
 {
-	for( i=0; i!=3; i++ ) s[i] = toupper(s[i]);
+	for( i=0; i!=3; i++ ) s[i] = toupper((int)s[i]);
 
 	switch(*s)
 	{
@@ -270,7 +270,7 @@ switch( m.special )
 printf( "%c%c%c%c",
 	file[m.from%10], row[m.from/10],
 	file[m.to%10], row[m.to/10] );
-if ( m.in2a != m.in1 ) printf( "%c", tolower(piece[m.in2a>>4]) );
+if ( m.in2a != m.in1 ) printf( "%c", tolower((int)piece[m.in2a>>4]) );
 
 }
 
@@ -322,7 +322,7 @@ tmove * sandex( char *inp, tmove *m, int n )
 		static char up[] = "pnrqk";
 		for( i=0; ok[i]!=*s; i++ ) if( ok[i] == '\0' ) return(NULL);
 		for( i=0; up[i]!='\0'; i++ )
-			if( up[i] == *s ) { *s = toupper(*s); break; }
+			if( up[i] == *s ) { *s = toupper((int)*s); break; }
 	}
 
 	/*** step 2: find the destination square ***/
@@ -393,7 +393,7 @@ tmove * sandex( char *inp, tmove *m, int n )
 	/*** step 4: is it a pawn promotion? determine piece ***/
 	in2a = p;
 	sto += 2; if( *sto == '=' ) sto++;
-	*sto = toupper(*sto);
+	*sto = toupper((int)*sto);
 	for(i=2;i!=7;i++) if( piece[i]==*sto ) in2a=(i<<4)+color;
 
 	/*** step 5: scan move list ***/
@@ -440,13 +440,13 @@ int checkmove( char *s, tmove *m )
 		else return 0;
 	}
 
-	for( i=0; s[i]!='\0' && ! islower(s[i]); i++ );
+	for( i=0; s[i]!='\0' && ! islower((int)s[i]); i++ );
 	if( s[i]=='\0' || s[i]!=file[m->from%10] ) return 0;
 
 	i++;
 	if( s[i]=='\0' || s[i]!=row[m->from/10] ) return 0;
 
-	for(    ; s[i]!='\0' && ( s[i]=='x' || ! islower(s[i]) ); i++ );
+	for(    ; s[i]!='\0' && ( s[i]=='x' || ! islower((int)s[i]) ); i++ );
 	if( s[i]=='\0' || s[i]!=file[m->to%10] ) return 0;
 
 	i++;
@@ -456,7 +456,7 @@ int checkmove( char *s, tmove *m )
 	if( m->in2a != m->in1 )
 	{
 		if( s[i] == '=' || s[i] == ':' ) i++;
-		if( toupper(s[i]) != piece[m->in2a>>4] ) return 0;
+		if( toupper((int)s[i]) != piece[m->in2a>>4] ) return 0;
 	}
 
 	return 1;
@@ -733,7 +733,7 @@ tgamenode p, q;
       if(*f == '\0' || *f == ' ') /* we shall find info for each squares */
       { puts(errmsg); return 1; }
 
-      if (isdigit(*f)) /* skip a number of squares */
+      if (isdigit((int)*f)) /* skip a number of squares */
       {
          if (*f == '0' || *f == '9') /* these are not allowed */
          { puts(errmsg); return 1; }
@@ -748,7 +748,7 @@ tgamenode p, q;
       }
       else
       { 
-         switch( tolower(*f) )
+         switch( tolower((int)*f) )
          {
          case 'k': B[j] = KING;   break;
          case 'q': B[j] = QUEEN;  break;
@@ -758,7 +758,7 @@ tgamenode p, q;
          case 'p': B[j] = PAWN;   break;
          default: puts(errmsg); return 1;  /* illegal piece char */
          }
-         if (tolower(*f) == *f) /* black */
+         if (tolower((int)*f) == (int)*f) /* black */
             B[j] |= BLACK;
          else
             B[j] |= WHITE;
@@ -834,7 +834,7 @@ tgamenode p, q;
 
    /* Now we should have the fifty-move info */
    i = 0;
-   while (isdigit(*f) && f != '\0') /* find the end of the fifty-move info */
+   while (isdigit((int)*f) && f != '\0') /* find the end of the fifty-move info */
       i = 10*i + (*f - '0'), f++;
    q.rule50 = i < 50 ? i : 50;
    if (i > 0 && p.m.special != 0) /* we have a "previous" move because of e.p. */
@@ -853,7 +853,7 @@ tgamenode p, q;
    }
 
    i = 0;
-   while (isdigit(*f) && *f != '\0') /* find the end of the fullmove number */
+   while (isdigit((int)*f) && *f != '\0') /* find the end of the fullmove number */
       i = 10*i + (*f - '0'), f++;
    i = 2*i;
    if (i != 0)

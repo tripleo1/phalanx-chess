@@ -31,7 +31,7 @@ void l_level( char * l )
 	while( *l == ' ' ) l++;
 	moves = atoi(l);
 
-	while( isdigit(*l) ) l++;
+	while( isdigit((int)*l) ) l++;
 	while( *l == ' ' ) l++;
 
 	if( *l == '\n' || *l == '\0' )
@@ -43,16 +43,16 @@ void l_level( char * l )
 
 	minutes = atoi(l);
 
-	while( isdigit(*l) ) l++;
+	while( isdigit((int)*l) ) l++;
 	if( *l == ':' )
 	{
 		l++;
 		seconds = atoi(l);
-		while( isdigit(*l) ) l++;
+		while( isdigit((int)*l) ) l++;
 	}
 	else seconds = 0;
 
-	while( isdigit(*l) ) l++;
+	while( isdigit((int)*l) ) l++;
 	while( *l == ' ' ) l++;
 	increment = atoi(l);
 
