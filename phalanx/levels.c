@@ -36,7 +36,7 @@ void l_level( char * l )
 
 	if( *l == '\n' || *l == '\0' )
 	{
-		printf("fixed time %i seconds\n", moves );
+		printfl("fixed time %i seconds\n", moves );
 		Flag.level = fixedtime; Flag.centiseconds = moves*100;
 		return;
 	}
@@ -57,11 +57,11 @@ void l_level( char * l )
 	increment = atoi(l);
 
 	if( moves==0 )
-		printf(
+		printfl(
 		 "level: all moves in %i:%02i, increment %i seconds\n",
 		 minutes, seconds, increment );
 	else
-		printf(
+		printfl(
 		 "level: %i moves in %i:%02i, increment %i seconds\n",
 		 moves, minutes, seconds, increment );
 
@@ -117,7 +117,7 @@ void l_startsearch(void)
 			T2 = Flag.increment * (Time/Flag.increment/8-20)/3;
 
 		if( Flag.post && T2 && Flag.xboard<2 )
-		printf( "    -> increment adds %g s to soft time limit\n",
+		printfl( "    -> increment adds %g s to soft time limit\n",
 			((float)T2) / (float)100 );
 
 		T2 += Time / ( moves - Counter%moves + 4 );
@@ -131,7 +131,7 @@ void l_startsearch(void)
 		}
 
 		if( Flag.post && Flag.xboard<2 )
-		printf( "    -> soft time limit %g s\n",
+		printfl( "    -> soft time limit %g s\n",
 		   ((float)T2) / (float)100 );
 
 		/*** Now, set up the hard limit ***/
@@ -152,7 +152,7 @@ void l_startsearch(void)
 		if( Flag.centiseconds < 25 ) Flag.centiseconds = 25;
 
 		if( Flag.post && Flag.xboard<2 )
-		printf( "    -> hard time limit %g s\n",
+		printfl( "    -> hard time limit %g s\n",
 			((float)Flag.centiseconds) / (float)100 );
 
 	break;

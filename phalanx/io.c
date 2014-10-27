@@ -1,5 +1,5 @@
-
 #include "phalanx.h"
+#include "stdarg.h"
 
 extern long Time;
 
@@ -14,6 +14,33 @@ char row[12] =
 
 tmove Pm[256];
 int Pn;
+
+
+
+/*
+ * printf() wrapper that also records the messages to the logfile
+ * Phalanx logs the messages only if started with the -g <logfile> parameter
+ */
+int printfl( const char * format, ... )
+{
+va_list arg;
+int done;
+
+va_start(arg,format);
+done = vprintf( format, arg );
+va_end(arg);
+
+if( Flag.log != NULL )
+{
+	fputc( '>', Flag.log );
+	va_start(arg,format);
+	vfprintf( Flag.log, format, arg );
+	va_end(arg);
+}
+
+return done;
+}
+
 
 
 /**
@@ -1122,7 +1149,7 @@ int command(void)
 	{
 		if( fgets(Inp,255,stdin) == NULL ) strcpy(Inp,"quit\n");
 		else if( Flag.log != NULL )
-			fprintf(Flag.log, "stdin: %s", Inp);
+			fprintf(Flag.log, "<%s", Inp);
 	}
 
 	if( strncmp(Inp,"exit",4) == 0 && Flag.analyze )
@@ -1141,14 +1168,14 @@ int command(void)
 /* added by Bernhard Pruemmer, amended by DD */
 	if( strncmp( Inp, "protover", 8 ) == 0 )
 	{
-	   printf("feature myname=\"" ENGNAME " " );
+	   printfl("feature myname=\"" ENGNAME " " );
 	   if(Flag.easy)
-	   { printf("Easy %i\"\n",Flag.easy); }
+	   { printfl("Easy %i\"\n",Flag.easy); }
 	   else if(Flag.nps)
-	   { printf("%i NPS\"\n",Flag.nps); }
-	   else printf(VERSION"\"\n");
+	   { printfl("%i NPS\"\n",Flag.nps); }
+	   else printfl(VERSION"\"\n");
 
-           printf("feature analyze=1 "
+           printfl("feature analyze=1 "
            "setboard=1 "
            "sigint=1 "
            "time=1 "
@@ -1156,7 +1183,7 @@ int command(void)
            "draw=0 "
            "ping=1 \n"
            );
-	   puts("feature done=1");
+	   printfl("feature done=1\n");
 	   Flag.xboard=20; /* version 2 */
 	   Inp[0]='\0'; return 1;
 	}
@@ -1177,7 +1204,7 @@ int command(void)
 	if( strncmp( Inp, "analyze", 7 ) == 0 )
 	{
 		if( Flag.ponder >= 2 ) { Abort = 1; return 0; }
-		puts("analyze mode, type 'exit' to terminate");
+		printfl("analyze mode, type 'exit' to terminate\n");
 		Flag.analyze = 1;
 		Flag.machine_color = 3;
 		Inp[0]='\0'; return 1;
@@ -1198,7 +1225,7 @@ int command(void)
 	  || strncmp( Inp, "black", 5 ) == 0 )
 	{
 		if( Flag.ponder >= 2 ) { Abort = 1; return 0; }
-		puts("you do not play both");
+		printfl("you do not play both\n");
 		if( Flag.machine_color == 0 )
 			Flag.machine_color = enemy(Color);
 		Inp[0]='\0'; return 1;
@@ -1208,7 +1235,7 @@ int command(void)
 	if( strncmp( Inp, "both", 4 ) == 0 )
 	{
 		if( Flag.ponder >= 2 ) { Abort = 1; return 0; }
-		puts("machine plays both");
+		printfl("machine plays both\n");
 		Flag.machine_color = 3;
 		Inp[0]='\0'; return 1;
 	}
@@ -1257,7 +1284,7 @@ int command(void)
 	if( strncmp( Inp, "post", 4 ) == 0 )
 	{
 		Flag.post = 1;
-		puts("post on");
+		printfl("post on\n");
 		Inp[0]='\0'; return 1;
 	}
 
@@ -1265,7 +1292,7 @@ int command(void)
 	if( strncmp( Inp, "nopost", 6 ) == 0 )
 	{
 		Flag.post = 0;
-		puts("post off");
+		printfl("post off\n");
 		Inp[0]='\0'; return 1;
 	}
 
@@ -1280,7 +1307,7 @@ int command(void)
 	if( strncmp( Inp, "ping", 4 ) == 0 )
 	{
 		Inp[1]='o'; /* ping -> pong */
-		printf(Inp);
+		printfl(Inp);
 		Inp[0]='\0'; return 1;
 	}
 
@@ -1309,7 +1336,7 @@ int command(void)
 			if( diff > 300 ) DrawScore = 20;
 			else if( diff < -300 ) DrawScore = -20;
 			else DrawScore = diff/15;
-			printf("setting draw score to %i\n",DrawScore);
+			printfl("setting draw score to %i\n",DrawScore);
 			Inp[0]='\0'; return 1;
 		}
 	}
@@ -1320,7 +1347,7 @@ int command(void)
 	{
 		if( Flag.ponder==0 && Flag.easy==0 )
 		Flag.ponder = 1;
-		if(Flag.ponder) puts("pondering on");
+		if(Flag.ponder) printfl("pondering on\n");
 		Inp[0]='\0'; return 1;
 	}
 
@@ -1332,7 +1359,7 @@ int command(void)
 			if( Flag.ponder >= 2 ) { Abort = 1; return 0; }
 			Flag.ponder = 0;
 		}
-		puts("pondering off");
+		printfl("pondering off\n");
 		Inp[0]='\0'; return 1;
 	}
 
@@ -1365,7 +1392,7 @@ int command(void)
 		else if( Flag.depth > MAXPLY*100 ) Flag.depth = MAXPLY*100;
 		Flag.level = fixeddepth;
 
-		printf("search depth %i\n", Flag.depth/100 );
+		printfl("search depth %i\n", Flag.depth/100 );
 		Inp[0]='\0'; return 1;
 	}
 
@@ -1417,8 +1444,8 @@ printf("%i entries\n",newsize);
 	if( strncmp( Inp, "book", 4 ) == 0 )
 	{
 		Flag.book = ! Flag.book;
-		if( Flag.book ) puts("book on");
-		else puts("book off");
+		if( Flag.book ) printfl("book on\n");
+		else printfl("book off\n");
 		Inp[0]='\0'; return 1;
 	}
 
@@ -1541,10 +1568,10 @@ puts("# (comment)");
 	  float seconds;
 	  if( sscanf(Inp+3,"%f",&seconds) == 0 ) {
 	    // expected a time in seconds
-	    printf ("Error: \"st:\" expected float , but got %s\n", Inp+3);
+	    printfl ("Error: \"st:\" expected float , but got %s\n", Inp+3);
 	  }
 	  // time argv S.A.
-	  printf ("Setting average time to %f seconds\n",seconds);
+	  printfl ("Setting average time to %f seconds\n",seconds);
 	  Flag.centiseconds = (int)(100*seconds);
 	  Flag.level = averagetime;
 	  Inp[0] = '\0';
@@ -1636,13 +1663,13 @@ puts("# (comment)");
 			do_move( m+i );
 			switch( terminal() )
 			{
-				case 1: puts("1/2-1/2 {Drawn game}"); break;
-				case 2: puts("1/2-1/2 {Stalemate}"); break;
+				case 1: printfl("1/2-1/2 {Drawn game}\n"); break;
+				case 2: printfl("1/2-1/2 {Stalemate}\n"); break;
 				case 3:
 					if( Color == WHITE )
-					puts("0-1 {Black mates}");
+					printfl("0-1 {Black mates}\n");
 					else
-					puts("1-0 {White mates}");
+					printfl("1-0 {White mates}\n");
 			}
 			Inp[0]='\0'; return 1;
 		}
@@ -1651,7 +1678,7 @@ puts("# (comment)");
 	/*** UNKNOWN COMMAND / ILLEGAL MOVE ***/
 
 	{ char *c=strchr(Inp,'\n'); if(c!=NULL) *c='\0'; else *Inp='\0'; }
-	printf("Illegal move: %s\n",Inp);
+	printfl("Illegal move: %s\n",Inp);
 	Inp[0] = '\0';
 
 	return 1;

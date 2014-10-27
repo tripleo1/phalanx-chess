@@ -480,6 +480,7 @@ extern int bcreate(int,char**);
 extern void new_game(void);
 
 /* input/output */
+extern int printfl(const char *, ...);
 extern void printm(tmove,char*);
 extern void printmSAN( tmove*, int, int, char* );
 extern void printPV(int,int,char*);
