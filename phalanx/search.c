@@ -73,13 +73,48 @@ for( i=0; i!=n; i++ )
 
 	do_move(m+max);
 
+	S[Ply].check = checktest(Color);
+
 	if( i == 0 || Depth <= 0 )
 	result = - evaluate( -Beta, -Alpha );
 	else
 	{
+#define	LMRLMP /* late move reductions and pruning */
+#ifdef	LMRLMP
+		if(    Depth > 0
+		    && !S[Ply-1].check && !S[Ply].check /* checks */
+		    && i > 2
+		    && m[max].in2 == 0 /* no captures reduced */
+		    && m[max].in1 == m[max].in2a /* no promotions */
+		  )
+		{
+			int olddepth=Depth;
+			Depth -= Depth/10+i+100;
+
+			if( m[max].value <= 0 ) Depth -= 50;
+
+			if( Depth>0 ) /* reduced search */
+			{
+				result = -evaluate( -Alpha-1, -Alpha );
+				Depth = olddepth;
+				if( result <= Alpha ) goto skipsearch;
+			}
+			else /* prune */
+			{
+				PV[Ply][Ply].from=0;
+				Depth=olddepth;
+				result=Alpha;
+				goto skipsearch;
+			}
+			Depth = olddepth;
+		}
+#endif	/* LMRLMP */
+
 		result = - evaluate( -Alpha-1, -Alpha );
 		if( result>Alpha && result<Beta )
 		result = - evaluate( -Beta, -Alpha-1 );
+
+		skipsearch:;
 	}
 
 	undo_move(m+max);

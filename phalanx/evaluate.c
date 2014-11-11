@@ -7,9 +7,9 @@
 
 #include "phalanx.h"
 
-#define EXTENSION_BASE 60
+#define EXTENSION_BASE 80
 
-#define NULL_MOVE_PRUNING 300
+#define NULL_MOVE_PRUNING 350
 
 #define RECAPTURE_EXTENSIONS
 #define PEE_EXTENSIONS     /* entering kings+pawns endgame extends */
@@ -373,7 +373,10 @@ printf("hit percentage = %lld.%02lld%%\n",good*100/all,good*10000/all%100);
 }
 #endif
 
-S[Ply].check = check = checktest(Color);
+if( Ply<2 )	/* called from rootsearch() */
+	S[Ply].check = check = checktest(Color);
+else		/* called from search() and the checktest() has been run */
+	check = S[Ply].check;
 
 if( Depth>0 || check )
 {
@@ -437,10 +440,11 @@ if( Depth>0 || check )
 		G[Counter].mtrl = G[Counter-1].xmtrl;
 		G[Counter].xmtrl = G[Counter-1].mtrl;
 		Color = enemy(Color);
+		S[Ply].check=0;
 
 		Depth -= NULL_MOVE_PRUNING;
 
-		if(Depth<0) Depth=0; /* else Depth -= Depth/4; */
+		if(Depth<0) Depth=0; else Depth -= Depth/4;
 		value = -evaluate(-Beta, -Beta+1);
 
 		Color = enemy(Color);

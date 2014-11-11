@@ -2,7 +2,7 @@
 #define PHALANX_INCLUDED
 
 #define ENGNAME "Phalanx"
-#define VERSION "XXIII+"
+#define VERSION "XXIII+LMR"
 
 #ifdef GNUFUN
 # include <getopt.h>
@@ -427,6 +427,7 @@ extern long T1, T2;                 /* time started & planned on a move */
 extern int DrawScore;
 #define DRAW ( Ply%2 ? -DrawScore : DrawScore )
 
+extern tsearchnode S[MAXPLY];       /* the current node is S[Ply] */
 extern tgamenode G[MAXCOUNTER];
 extern int Counter;                 /* game counter, points to G[] */
 
