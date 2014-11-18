@@ -573,6 +573,66 @@ else
 	}
 #endif
 
+#ifdef RECAPTURE_EXTENSIONS
+	if( Depth>0 && G[Counter-1].m.in2 )
+	if( result<lastiter+50 && result<250 )   /* winning anyway: dont */
+	{
+		int i, t=G[Counter-1].m.to;
+		int v1 = Values[ G[Counter-1].m.in1 >> 4 ];
+		int v2 = Values[ G[Counter-1].m.in2 >> 4 ];
+		int newdch;
+
+		if( Depth <= 200 )
+			newdch = EXTENSION_BASE-30;
+		else
+			newdch = EXTENSION_BASE-20;
+
+		if( min(v1,v2) > 400 || G[Counter].mtrl < Q_VALUE )
+			newdch -= 70;
+		else
+		if( min(v1,v2) > 200 || G[Counter].mtrl < (Q_VALUE+N_VALUE) )
+			newdch -= 45;
+
+		/* recaptures depth bonus */
+		for( i=0; i!=n; i++ )
+		if( m[i].to == t )
+		if( m[i].dch > newdch )
+/*		if( Depth<=100 || see(B,m[i].from,m[i].to) >= v1 ) */
+			m[i].dch = newdch;
+	}
+#endif
+
+#ifdef PEE_EXTENSIONS
+	if( Depth > 200
+	 && G[Counter].mtrl <= (8*P_VALUE)
+	 && G[Counter].xmtrl <= (8*P_VALUE+Q_VALUE)
+	 && G[Counter-1].m.in2 > KNIGHT )
+	{
+		int i;
+		int target=0;
+		int cdch;
+
+		for( i=L[L[Color].next].next; i!=0; i=L[i].next )
+		if( B[i] >= KNIGHT ) goto nopee;
+
+		for( i=L[L[enemy(Color)].next].next; i!=0; i=L[i].next )
+		if( B[i] >= KNIGHT )
+		{ if( target ) goto nopee; else target=i; }
+
+		if( ! target ) goto nopee;
+
+		if( G[Counter-1].m.in2 >= QUEEN ) cdch = min(Depth,450);
+		else cdch = min(Depth*2/3,350);
+
+		for( i=0; i!=n; i++ )
+		if( m[i].to == target )
+		{ m[i].dch -= cdch;
+		  /* printboard(NULL); printm(m[i],NULL); getchar(); */ }
+
+		nopee:;
+	}
+#endif
+
 #ifdef ETTC
 if( Depth > 200 && SizeHT != 0 )
 {
@@ -637,66 +697,6 @@ else
 		generate_legal_captures(m,&n,Alpha-result-minmv);
 #endif
 }
-
-#ifdef RECAPTURE_EXTENSIONS
-	if( Depth>0 && G[Counter-1].m.in2 )
-	if( result<lastiter+50 && result<250 )   /* winning anyway: dont */
-	{
-		int i, t=G[Counter-1].m.to;
-		int v1 = Values[ G[Counter-1].m.in1 >> 4 ];
-		int v2 = Values[ G[Counter-1].m.in2 >> 4 ];
-		int newdch;
-
-		if( Depth <= 200 )
-			newdch = EXTENSION_BASE-30;
-		else
-			newdch = EXTENSION_BASE-20;
-
-		if( min(v1,v2) > 400 || G[Counter].mtrl < Q_VALUE )
-			newdch -= 70;
-		else
-		if( min(v1,v2) > 200 || G[Counter].mtrl < (Q_VALUE+N_VALUE) )
-			newdch -= 45;
-
-		/* recaptures depth bonus */
-		for( i=0; i!=n; i++ )
-		if( m[i].to == t )
-		if( m[i].dch > newdch )
-/*		if( Depth<=100 || see(B,m[i].from,m[i].to) >= v1 ) */
-			m[i].dch = newdch;
-	}
-#endif
-
-#ifdef PEE_EXTENSIONS
-	if( Depth > 200
-	 && G[Counter].mtrl <= (8*P_VALUE)
-	 && G[Counter].xmtrl <= (8*P_VALUE+Q_VALUE)
-	 && G[Counter-1].m.in2 > KNIGHT )
-	{
-		int i;
-		int target=0;
-		int cdch;
-
-		for( i=L[L[Color].next].next; i!=0; i=L[i].next )
-		if( B[i] >= KNIGHT ) goto nopee;
-
-		for( i=L[L[enemy(Color)].next].next; i!=0; i=L[i].next )
-		if( B[i] >= KNIGHT )
-		{ if( target ) goto nopee; else target=i; }
-
-		if( ! target ) goto nopee;
-
-		if( G[Counter-1].m.in2 >= QUEEN ) cdch = min(Depth,450);
-		else cdch = min(Depth*2/3,350);
-
-		for( i=0; i!=n; i++ )
-		if( m[i].to == target )
-		{ m[i].dch -= cdch;
-		  /* printboard(NULL); printm(m[i],NULL); getchar(); */ }
-
-		nopee:;
-	}
-#endif
 
 /*** Compute heuristic values of moves ***/
 add_killer( m, n, t );
