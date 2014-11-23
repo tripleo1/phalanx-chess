@@ -86,12 +86,13 @@ for( i=0; i!=n; i++ )
 		    && i > 2
 		    && m[max].in2 == 0 /* no captures reduced */
 		    && m[max].in1 == m[max].in2a /* no promotions */
+		    && m[max].dch >= 100 /* no extended moves */
 		  )
 		{
 			int olddepth=Depth;
-			Depth -= Depth/10+i+100;
+			Depth -= Depth/max(6,(33-i))+i+100;
 
-			if( m[max].value <= 0 ) Depth -= 50;
+			if( m[max].value <= 0 ) Depth -= 100;
 
 			if( Depth>0 ) /* reduced search */
 			{
