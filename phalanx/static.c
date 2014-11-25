@@ -200,7 +200,7 @@ int outpost_[80] =
 int B_mobi[20] =
  { -36, -28, -20, -14, -6, -2, 1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8 };
 int R_mobi[16] =
- { -9, -5, -2, 0, 2, 4, 5, 6, 6, 6, 6, 6, 6, 6, 6, 6 };
+ { -20, -15, -10, -7, -4, -2, 0, 2, 4, 6, 8, 9, 10, 10, 10, 10 };
 
 /* power table */
 unsigned P[120];
@@ -400,6 +400,7 @@ for( i=L[i].next; i!=0; i=L[i].next )
 		  }
 		}
 		result += R_mobi[mobi];
+		endresult += 2 * R_mobi[mobi];
 	break;
 	case WQ: mB[ Th[i] ] = BQ; wl[wn] = i; wn++;
 		if( i>=A1 && i<=H3 ) Wknow.r7r++;
@@ -483,6 +484,7 @@ for( i=L[i].next; i!=0; i=L[i].next )
 		  }
 		}
 		result -= R_mobi[mobi];
+		endresult -= 2 * R_mobi[mobi];
 	break;
 	case BQ: mB[ Th[i] ] = WQ; bl[bn] = Th[i]; bn++;
 		if( i>=A1 && i<=H3 ) Bknow.r7r++;
