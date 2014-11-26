@@ -939,14 +939,21 @@ for(;;)
 			if( b[sq+10]==0 )
 			{
 				if( row==8 )
-				{ if(see(b,sq,sq+10)>=0) ppeval+=80; }
+				{
+					if(see(b,sq,sq+10)>=0) ppeval+=80;
+					else abonus /= 2;
+				}
 				else
 				if( row==7 && b[sq+20]==0 )
 				if( see(b,sq,sq+10)>=0 && see(b,sq,sq+20)>=0 )
-				ppeval+=50;
+				{
+					ppeval+=50;
+					abonus /= 2;
+				}
 			}
 			else /* blocked */
-			if( color(b[sq+10]) == BLACK ) ppeval-=abonus/2;
+			if( color(b[sq+10]) == BLACK )
+			{ abonus /= 2; ppeval = abonus; }
 
 			/* blocked - reserve blocking square */
 			if( color(b[sq+20]) == BLACK ) ppeval-=abonus/4;
@@ -954,7 +961,7 @@ for(;;)
 			/* covered or a member of a phalanx */
 			if( b[sq-9]==WP || b[sq-11]==WP
 			 || b[sq-1]==WP || b[sq+1]==WP )
-			{ ppeval += 2*abonus; }
+			{ ppeval += abonus; }
 
 			/* rook behind - support or brake */
 			for( j=sq-10;
