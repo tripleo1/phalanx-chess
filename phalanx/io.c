@@ -1181,6 +1181,7 @@ int command(void)
            "time=1 "
            "memory=1 "
            "draw=0 "
+	   "option=\"Randomizer (0-50) -slider 0 0 50\" "
            "ping=1 \n"
            );
 	   printfl("feature done=1\n");
@@ -1394,6 +1395,17 @@ int command(void)
 
 		printfl("search depth %i\n", Flag.depth/100 );
 		Inp[0]='\0'; return 1;
+	}
+
+/* COMMAND: randomizer option N */
+	if( strncmp( Inp, "option Randomizer (0-50)=", 18 ) == 0 )
+	{
+		sscanf( &Inp[25],"%i",&Flag.random);
+		if( Flag.random )
+			printfl("telluser randomizer set to %i centipawns\n",
+			Flag.random);
+		else
+			printfl("telluser randomizer off\n");
 	}
 
 /* COMMAND: memory N */
