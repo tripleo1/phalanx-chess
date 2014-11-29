@@ -44,5 +44,11 @@ clean:
 
 backup:
 	tar -czvf Archive/phalanx.tgz \
-	makefile *.c *.h pbook.phalanx sbook.phalanx test.fin
+	makefile *.c *.h pbook.phalanx sbook.phalanx test.fin phalanx.eng
+
+install: phalanx
+	install -m 0755 phalanx $(DESTDIR)$(prefix)/bin
+	install -m 0644 pbook.phalanx $(PBOOK_DIR)
+	install -m 0644 sbook.phalanx $(SBOOK_DIR)
+	install -m 0644 phalanx.eng $(DESTDIR)$(prefix)/share/games/plugins/xboard/
 
