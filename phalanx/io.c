@@ -1489,6 +1489,7 @@ puts("# (comment)");
 /* COMMAND: score */
 	if( strncmp(Inp,"score\n",6) == 0 || strncmp(Inp,"s\n",2) == 0 )
 	{
+		Totmat = G[Counter].mtrl+G[Counter].xmtrl;
 		Scoring = 1; Depth = 100;
 		printf("\n (stm) material = %i\n",
 			G[Counter].mtrl-G[Counter].xmtrl);
