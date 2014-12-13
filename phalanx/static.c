@@ -197,8 +197,13 @@ int outpost_[80] =
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 }; const int *outpost = outpost_-20;
 
+/* Mobility bonuses are extremely non-linear, a piece that has a very small
+ * number of moves gets a large penalty. The rook mobility bonus/penalty is
+ * tripled in endgame. */
 int B_mobi[20] =
  { -36, -28, -20, -14, -6, -2, 1, 2, 3, 4, 5, 6, 7, 8, 8, 8, 8, 8, 8, 8 };
+int N_mobi[10] =
+ { -50, -25, -15, -10, -5, 0, 5, 10, 15, 20 };
 int R_mobi[16] =
  { -20, -15, -10, -7, -4, -2, 0, 2, 4, 6, 8, 9, 10, 10, 10, 10 };
 
@@ -356,8 +361,19 @@ for( i=L[i].next; i!=0; i=L[i].next )
 	break;
 	case WN: mB[ Th[i] ] = BN; wl[wn] = i; wn++;
 		Wknow.n++;
+		mobi = 0;
 		for( j=0; j!=8; j++ )
-		{ int d = i+N_moves[j]; P[d] |= WNM; P[d] += WWW; }
+		{
+			int d = i+N_moves[j]; P[d] |= WNM; P[d] += WWW;
+			/* knight mobility below, note that this is not just
+			 * the number of pseudo-legal moves. We don't count
+			 * squares with friendly pawns and squares attacked
+			 * by enemy pawns. We do count moves targeting other
+			 * friendly and enemy pieces - search should handle. */
+			if( B[d]!=3 && B[d]!=WP && B[d+9]!=BP && B[d+11]!=BP)
+				mobi++;
+		}
+		result += N_mobi[mobi];
 	break;
 	case WB: mB[ Th[i] ] = BB; wl[wn] = i; wn++;
 		Wknow.b++;
@@ -440,8 +456,14 @@ for( i=L[i].next; i!=0; i=L[i].next )
 	break;
 	case BN: mB[ Th[i] ] = WN; bl[bn] = Th[i]; bn++;
 		Bknow.n++;
+		mobi = 0;
 		for( j=0; j!=8; j++ )
-		{ int d = i+N_moves[j]; P[d] |= BNM; P[d] += BBB; }
+		{
+			int d = i+N_moves[j]; P[d] |= BNM; P[d] += BBB;
+			if( B[d]!=3 && B[d]!=BP && B[d-9]!=WP && B[d-11]!=WP)
+				mobi++;
+		}
+		result -= N_mobi[mobi];
 	break;
 	case BB: mB[ Th[i] ] = WB; bl[bn] = Th[i]; bn++;
 		Bknow.b++;
