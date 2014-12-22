@@ -80,7 +80,7 @@ void l_startsearch(void)
 	T1 = ptime();
 
 	/* Adjust the DrawScore to avoid long boring drawish endgames.
-	 * The default DrawScore is -20; Phalanx tries to avoid draws.
+	 * The default DrawScore is -10; Phalanx tries to avoid draws.
 	 * That's good, but I have observed too many games that ended
 	 * with the 50 moves rule draw, where the engine played
 	 * an KR vs KR endgame. The code below fixes that behaviour. */

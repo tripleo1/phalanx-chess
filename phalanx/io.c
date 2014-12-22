@@ -1247,7 +1247,7 @@ int command(void)
 		if( Flag.ponder >= 2 ) { Abort = 1; return 0; }
 		// setfen("rnbqkbnr/pppppppp/////PPPPPPPP/RNBQKBNR/w");
 		setfen(initialpos);
-		DrawScore = -20;
+		DrawScore = -10;
 		if( Flag.analyze ) Flag.machine_color = WHITE;
 		else
 		{

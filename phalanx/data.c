@@ -15,7 +15,7 @@ int Counter;
 
 int Color;
 int LastIter, Depth, Ply, FollowPV, Totmat, Abort, NoAbort;
-int DrawScore = -20;
+int DrawScore = 0;
 long AllDepth = 0;
 int64 AllNPS = 0;
 int64 Nodes;
