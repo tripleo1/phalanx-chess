@@ -872,6 +872,9 @@ tgamenode p, q;
 
    /* Finally, check the fullmove number */
    Counter = 0;
+
+#undef nodef /* this block breaks moves/time timecontrols, Counter must be 0 */
+#ifdef nodef
    if (p.m.special != 0)
    {
       Counter++;
@@ -890,6 +893,7 @@ tgamenode p, q;
          i++;
       Counter = i;
    }
+#endif
 
    /* put results in place */ 
    G[Counter] = q;
