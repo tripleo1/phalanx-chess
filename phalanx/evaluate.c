@@ -234,7 +234,11 @@ if(Flag.polling)
   tv.tv_usec=0;
   select(16, &readfds, 0, 0, &tv);
   data=FD_ISSET(fileno(stdin), &readfds);
-  if(data) interrupt(0);
+  if(data)
+  {
+	if(polslice<8000 || Flag.analyze) polslice=4000; else polslice/=2;
+	interrupt(0);
+  }
 
 #else
 
