@@ -89,9 +89,14 @@ for( i=0; i!=n; i++ )
 
 	if( FollowPV )
 	{
-	  if( m1->from == mpv->from
-	    && m1->to == mpv->to
-	    && m1->in2a == mpv->in2a ) m1->value = CHECKMATE;
+	  if(
+		( mpv->special && mpv->special==m1->special )
+		||
+		( !mpv->special && m1->from == mpv->from
+		&& m1->to == mpv->to
+		&& m1->in2a == mpv->in2a )
+	   )
+		m1->value = CHECKMATE;
 	}
 	else
 	{
