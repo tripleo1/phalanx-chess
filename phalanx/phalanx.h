@@ -229,7 +229,7 @@ tdist;
 
 #define NOVALUE 32123
 #define CHECKMATE 30000
-#define MAXPLY 40
+#define MAXPLY 64
 #define MAXCOUNTER 1024 /* 512 moves */
 
 #define HASH_COLOR ((unsigned)0xFDB97531)
