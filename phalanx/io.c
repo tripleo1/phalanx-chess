@@ -551,7 +551,7 @@ char ss[1024];
 extern long T1;
 long t = ptime();
 
-if( typ!=0 && !Flag.analyze && ( Abort || t-T1 < Flag.noise ) ) return;
+if( typ!=0 && (typ!=3 || Flag.xboard<=1) && ( Abort || t-T1 < Flag.noise ) ) return;
 
 if( Flag.log && s==NULL )
 {
