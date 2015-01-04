@@ -102,10 +102,10 @@ COMMAND LINE OPTIONS
        standard input and polling input makes it stop thinking after almost
        zero seconds on each position.
     -b <+/->  opening book                        default: on
-    -l <+/->  learning on/off                     default: on
+    -l <+/->  learning on/off                     default: off
     -r <resign value in centipawns>               default: 0 (no resigning)
     -e <easy level 0...99>                        default: 0 (best play)
-       1 is the easiest and 99 is the hardest easy level. Phalanx tries to
+       1 is the hardest and 99 is the easiest easy level. Phalanx tries to
        emulate human-like blunders, the higher the number the more blunders it
        plays. It also adds more randomness with the easy levels, repeating
        games should be impossible. Easy levels set hashtable size to zero,
@@ -168,9 +168,12 @@ COMMAND LINE OPTIONS
        50 gives lots of variability and maybe dubious moves, 100 gives almost
        no variability and only the highest valued moves. Default is 80.
 
+  Note that the book creation does not work with DOS end-of-lines in the PGN
+  input, just use dos2unix filter if needed.
+
   Examples: phalanx -c+ -s+ -o - -x- -f 60 -t4000
             xboard -fcp "phalanx -r800"
-            xboard -fcp 'phalanx -e 100'
+            xboard -fcp 'phalanx -e 99'
 
 
 ASCII INTERFACE COMMANDS
