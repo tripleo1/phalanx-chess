@@ -1628,7 +1628,7 @@ if(   Wknow.bishopcolor
 #define TEMPO 4
 
 if( Color == WHITE ) return result+TEMPO;
-else return -result-TEMPO;
+else return -result+TEMPO;
 
 }
 
