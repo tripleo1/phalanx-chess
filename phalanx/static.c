@@ -232,7 +232,7 @@ int i;
 ***     cache on small machines.
 **/  
 
-int midresult, endresult, result;
+int midresult, endresult, result, mtrl_diff;
 
 int whp, bhp; /* sum of hung pieces. >=2 means troubles -> big penalty. */
 
@@ -744,6 +744,10 @@ n = wn; l = wl; b = B;
 pf = wpf; xpf = bpf;
 know = &Wknow; xknow = &Bknow;
 kp = Wknow.kp; xkp = Bknow.kp;
+
+mtrl_diff = G[Counter].mtrl-G[Counter].xmtrl;
+if( Color == BLACK ) mtrl_diff = -mtrl_diff;
+
 for(;;)
 {
 	tdist *kdist = dist+120*kp;
@@ -894,6 +898,64 @@ for(;;)
 			printf( " (bla) castling = %i\n", d );
 		}
 #endif
+	}
+
+	if( mtrl_diff > 0 )
+	{
+		int mtrl_weight = 100; /* 100% */
+
+		if( know->p == 0 )
+		{
+			/* Winning without pawns is difficult. We try
+			 * to reduce the distance of kings. Then, if
+			 * we are ahead a minor piece or less
+			 * we just reduce the advantage. We ignore
+			 * enemy pawns here - a rook against
+			 * 3 non-advanced pawns should still win. */
+
+			er += 10 - 2*dist[kp*120+xkp].max;
+
+			if( mtrl_diff + P_VALUE*xknow->p <= N_VALUE )
+				mtrl_weight /= 10;
+		}
+		else
+		if( know->p == 1 && mtrl_diff == P_VALUE )
+		{
+			if( know->q || know->r ) mtrl_weight /= 2;
+			else mtrl_weight /= 4;
+		}
+		else
+		{
+			/* trade down bonus:
+			 * if ahead in material, trade pieces but not pawns */
+
+			static int pp[12] =
+			{ 0, 1, 4, 6, 7, 8, 9, 9, 9, 9, 9, 9 };
+
+			int tbonus =
+			 ( pp[know->p]
+			 - 3*xknow->q - 2*xknow->r
+			 - xknow->n - xknow->b ) /* -11 .. 9 */
+			 * ( min(mtrl_diff,N_VALUE)/50 + 2 ); /* 2..9 */
+
+			er += tbonus; mr += tbonus;
+		}
+
+		/*** different colored bishops in endgame lead to draw ***/
+		if( Totmat <  ENDMATERIAL )
+		if(   know->bishopcolor
+		   && know->xbishopcolor
+		   && know->bishopcolor+know->xbishopcolor == 3
+		   && know->n==0 && know->r==0 && know->q==0
+		   && xknow->n==0 && xknow->r==0 && xknow->q==0 )
+		{
+			mtrl_weight -= 2 * mtrl_weight / (know->p + 2);
+		}
+
+		mtrl_weight = 100-mtrl_weight;
+		mr -= mtrl_diff * mtrl_weight / 100;
+		er -= mtrl_diff * mtrl_weight / 100;
+
 	}
 
 	/*** pawn structure ***/
@@ -1474,6 +1536,7 @@ printboard(); printf("%02i",sq); getchar();
 		pf = bpf; xpf = wpf;
 		know = &Bknow; xknow = &Wknow;
 		kp = Th[Bknow.kp]; xkp = Th[Wknow.kp];
+		mtrl_diff = -mtrl_diff;
 	}
 	else
 	{
@@ -1562,68 +1625,10 @@ if( Bknow.khung > 1 )
 Wknow.prune = ( Wknow.hung < 10 && Wknow.khung < 2 );
 Bknow.prune = ( Bknow.hung < 10 && Bknow.khung < 2 );
 
-/**
-***   Trade down bonus - when ahead in material, trade pieces, keep pawns
-**/
-{
-	int tbonus = ( G[Counter].mtrl - G[Counter].xmtrl );
-	if( tbonus != 0 )
-	{
-		int r;
-
-		if( Color == BLACK ) tbonus = -tbonus;
-
-		if( tbonus > 0 ) /* white stronger */
-		{
-			tbonus = min(tbonus,N_VALUE) + 200;
-			if( Wknow.p || tbonus>=(N_VALUE+200) )
-			r = ( Wknow.p - 2*Bknow.q-Bknow.b-Bknow.r-Bknow.n )
-			    * tbonus / 50;
-			else /* white has no pawns! */
-			r = - tbonus / 4;
-		}
-		else             /* black stronger */
-		{
-			tbonus = max(tbonus,-N_VALUE) - 200;
-			if( Bknow.p || tbonus<=-(N_VALUE+200) )
-			r = ( Bknow.p - 2*Wknow.q-Wknow.b-Wknow.r-Wknow.n )
-			    * tbonus / 50;
-			else
-			r = - tbonus / 4;
-		}
-
-		result += r;
-
-#ifdef SCORING
-		if( Scoring )
-		printf(" (w/b) traded pieces/pawns = %i\n", r );
-#endif
-	}
-}
-
 if( Totmat < ENDMATERIAL ) result += endresult;
 else if( Totmat > MIDMATERIAL ) result += midresult;
 else result += (Totmat-ENDMATERIAL) * midresult / (MIDMATERIAL-ENDMATERIAL)
             + (MIDMATERIAL-Totmat) * endresult / (MIDMATERIAL-ENDMATERIAL);
-
-/*** different colored bishops in endgame lead to draw ***/
-if( Totmat <  ENDMATERIAL )
-if(   Wknow.bishopcolor
-   && Wknow.xbishopcolor
-   && Wknow.bishopcolor+Wknow.xbishopcolor == 3
-   && Wknow.n==0 && Wknow.r==0 && Wknow.q==0
-   && Bknow.n==0 && Bknow.r==0 && Bknow.q==0 )
-{
-	int difference = ( G[Counter].mtrl - G[Counter].xmtrl ) / 4;
-	result/=2;
-	if( difference > 0 )
-	{ if(Color==WHITE) result -= 50+difference;
-	              else result += 50+difference; }
-	else
-	if( difference < 0 )
-	{ if(Color==WHITE) result += 50-difference;
-	              else result -= 50-difference; }
-}
 
 #define TEMPO 4
 
