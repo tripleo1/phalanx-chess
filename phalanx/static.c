@@ -941,16 +941,18 @@ for(;;)
 			er += tbonus; mr += tbonus;
 		}
 
-		/*** different colored bishops in endgame lead to draw ***/
-		if( Totmat <  ENDMATERIAL )
-		if(   know->bishopcolor
-		   && know->xbishopcolor
-		   && know->bishopcolor+know->xbishopcolor == 3
-		   && know->n==0 && know->r==0 && know->q==0
-		   && xknow->n==0 && xknow->r==0 && xknow->q==0 )
-		{
-			mtrl_weight -= 2 * mtrl_weight / (know->p + 2);
-		}
+		/* Opposite colored bishops in endgame lead to draw
+		 * This also covers positions with other pieces,
+		 * e.g. RBPP-RBP, in these cases, the material
+		 * rebalancing is much lower. */
+		if(   know->b == 1 && xknow->b == 1
+		   && mtrl_diff == (know->p - xknow->p) * P_VALUE
+		   && know->bishopcolor != know->xbishopcolor )
+		mtrl_weight -=
+			100 * mtrl_weight
+			/ (    max(P_VALUE,mtrl_diff)
+			       + 20*know->p
+			       + 250*know->r + 400*know->n + 400*know->q );
 
 		mtrl_weight = 100-mtrl_weight;
 		mr -= mtrl_diff * mtrl_weight / 100;
