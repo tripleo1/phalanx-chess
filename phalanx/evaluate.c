@@ -418,6 +418,27 @@ if( Depth>0 || check )
 	}
 #endif /* FORWARD_PRUNING */
 
+
+/*
+if(    Depth<1500 && Depth>0
+    && Beta-Alpha==1 && !check
+    && result < Beta-P_VALUE-Depth )
+{
+	generate_legal_checks(m,&n);
+	if( n==0 ) { result=Alpha; goto end; }
+}
+else
+*/
+	generate_legal_moves(m,&n,check);
+
+	/** Return, if there is no legal move - checkmate or stalemate **/
+	if(n==0)
+	{
+		PV[Ply][Ply].from=0;
+		if(check) return Ply-CHECKMATE;
+		else return DRAW;
+	}
+
 #ifdef NULL_MOVE_PRUNING
 	if(
 		Depth > 100
@@ -459,27 +480,6 @@ if( Depth>0 || check )
 		if( value >= Beta ) { result = Beta; goto end; }
 	}
 #endif
-
-
-/*
-if(    Depth<1500 && Depth>0
-    && Beta-Alpha==1 && !check
-    && result < Beta-P_VALUE-Depth )
-{
-	generate_legal_checks(m,&n);
-	if( n==0 ) { result=Alpha; goto end; }
-}
-else
-*/
-	generate_legal_moves(m,&n,check);
-
-	/** Return, if there is no legal move - checkmate or stalemate **/
-	if(n==0)
-	{
-		PV[Ply][Ply].from=0;
-		if(check) return Ply-CHECKMATE;
-		else return DRAW;
-	}
 
 #ifdef CHECK_EXTENSIONS
 	if( check && Depth>0 )       /* extend the lines */
