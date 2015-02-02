@@ -445,8 +445,10 @@ else
 		&& ( result >= Beta || Depth > NULL_MOVE_PRUNING )
 		&& ! FollowPV
 		&& ! check
-		&& G[Counter].mtrl > 8*P_VALUE        /* zugzwang fix */
-		&& G[Counter-1].m.special != NULL_MOVE   /* prev. node not nullm */
+		&& n>4
+		&& ( (Color==WHITE) ? (Wknow.q||Wknow.r||Wknow.b||Wknow.n>1)
+		                    : (Bknow.q||Bknow.r||Bknow.b||Bknow.n>1) )
+		&& G[Counter-1].m.special != NULL_MOVE  /* prev. node not nm */
 		&& ( t==NULL || t->depth <= Depth-NULL_MOVE_PRUNING
 		  || t->result==beta_cut || t->value >= Beta )
 	)
