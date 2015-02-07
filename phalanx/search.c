@@ -81,12 +81,11 @@ for( i=0; i!=n; i++ )
 	{
 #define	LMRLMP /* late move reductions and pruning */
 #ifdef	LMRLMP
+/* Entry condition simplified since XXIV, now we do reduce captures,
+ * promotions and check evasions. */
 		if(    Depth > 0
-		    && !S[Ply-1].check && !S[Ply].check /* checks */
+		    && !S[Ply].check /* checking move */
 		    && i > 2
-		    && m[max].in2 == 0 /* no captures reduced */
-		    && m[max].in1 == m[max].in2a /* no promotions */
-		    && m[max].dch >= 100 /* no extended moves */
 		  )
 		{
 			int olddepth=Depth;
