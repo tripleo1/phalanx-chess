@@ -484,35 +484,23 @@ else
 #endif
 
 #ifdef CHECK_EXTENSIONS
-	if( check && Depth>0 )       /* extend the lines */
+	if( check && Depth>0 )
 	{
-		if( result>lastiter-50 && result>-250 )
-		{
-			int i, newdch = EXTENSION_BASE-20, inrow=0;
+		int newdch, i;
 
-			if( Depth <= 100 ) newdch -= 30;
-			else
-			if( Depth <= 200 ) newdch -= 20;
+		/* We compute the extension from the depth remaining (Depth)
+		 * and number of legal moves available (n) */
+		newdch =
+			   EXTENSION_BASE - 20
+			 - 3000/(Depth+100) /* 30..0 */
+			 - 200/(n*(n+1)); /* 1~100,2~33,3~16,..0 */
 
-			for( i=Ply-2; i>0 && S[i].check; i-=2 ) inrow++;
-			switch( inrow ) /* number of checks in row */
-			{
-				case 0: break;
-				case 1: newdch -= 10; break;
-				default: newdch -= 30; break;
-			}
+		if( result<=lastiter-50 || result <= -250 )  /* losing anyway */
+			newdch = (newdch+100)/2; /* smaller extension, 50% */
 
-			if(n>4)	newdch += 6*(n-5);
-			else	newdch -= 20*(5-n);
-
-			if( newdch > 60 ) newdch = 60;
-			else if( newdch < -40 ) newdch = -40;
-
-			for( i=0; i!=n; i++ )
-				m[i].dch = newdch;
-		}
-		else  /* losing anyway */
-		{ int i; for( i=0; i!=n; i++ ) m[i].dch = EXTENSION_BASE; }
+		for( i=0; i!=n; i++ )
+			if( m[i].in2 ) m[i].dch = (newdch+100)/2; /* capture */
+			else m[i].dch = newdch;
 	}
 #endif
 
