@@ -51,7 +51,41 @@ return PWINS-8*steps;
 /**
 ***  Some simple drawish knowledge - white cannot access critical square.
 **/
-if( wp<A7 && bk-wp==10 ) return PDRAWS;
+
+if( dist[120*bk+wp+10].max == 1 && dist[120*wk+wp+10].max -wtm > 1 )
+return PDRAWS;
+
+if( wp<A7 ) /* pawn on row 2..6 */
+{
+	if( bk-wp == 10 ) return PDRAWS;
+	if( wp>A6 && wp<H6 ) /* pawn on 6th row */
+	{
+		if( bk-wp == 20 )
+		{
+			if( wtm && ( wk-wp==1 || wk-wp==-1 ) )
+				return PWINS;
+			else	return PDRAWS;
+		}
+
+		if( bk-wp==19 || bk-wp==21 )
+		{
+			if( !wtm && ( wk-wp==1 || wk-wp==-1 ) )
+				return PWINS;
+			else	return PDRAWS;
+		}
+	}
+}
+else /* pawn is on 7th row already */
+if( bk-wp == 10 )
+{
+	if( wtm ) /* stronger side to move */
+	{ if( wp-wk == 10 ) return PWINS-8*steps; }
+	else
+	{ if( wp-wk == 9 || wp-wk==11 ) return PWINS; }
+
+	return PDRAWS; /* all other cases drawn */
+}
+
 if( wp<A6 )
 {
 	if( bk-wp==20 ) return PDRAWS;
