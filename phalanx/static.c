@@ -426,7 +426,7 @@ for( i=L[i].next; i!=0; i=L[i].next )
 		  do { d += step; P[d] |= WQM; P[d] += WWW; }
 		  while( B[d] == 0 );
 
-		  if( B[d]==BN || ( B[d]==BB && d<4 ) || ( B[d]==BR && d>=4 ) )
+		  if( B[d]==BN || ( B[d]==BB && j<4 ) || ( B[d]==BR && j>=4 ) )
 		  { pin[npin]=d;
 		    do d+=step; while( B[d]==0 );
 		    if( B[d]==BK ) npin++;
@@ -515,7 +515,7 @@ for( i=L[i].next; i!=0; i=L[i].next )
 		{ int step = RB_dirs[j]; int d = i;
 		  do { d += step; P[d] += BBB; P[d] |= BQM; }
 		  while( B[d] == 0 );
-		  if( B[d]==WN || ( B[d]==WB && d<4 ) || ( B[d]==WR && d>=4 ) )
+		  if( B[d]==WN || ( B[d]==WB && j<4 ) || ( B[d]==WR && j>=4 ) )
 		  { pin[npin]=d;
 		    do d+=step; while( B[d]==0 );
 		    if( B[d]==WK ) npin++;
