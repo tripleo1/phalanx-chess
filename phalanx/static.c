@@ -419,7 +419,7 @@ for( i=L[i].next; i!=0; i=L[i].next )
 		endresult += 2 * R_mobi[mobi];
 	break;
 	case WQ: mB[ Th[i] ] = BQ; wl[wn] = i; wn++;
-		if( i>=A1 && i<=H3 ) Wknow.r7r++;
+		if( i>=A6 ) Wknow.r7r++;
 		Wknow.q++;
 		for( j=0; j!=8; j++ )
 		{ int step = RB_dirs[j]; int d = i;
@@ -509,7 +509,7 @@ for( i=L[i].next; i!=0; i=L[i].next )
 		endresult -= 2 * R_mobi[mobi];
 	break;
 	case BQ: mB[ Th[i] ] = WQ; bl[bn] = Th[i]; bn++;
-		if( i>=A1 && i<=H3 ) Bknow.r7r++;
+		if( i<=H3 ) Bknow.r7r++;
 		Bknow.q++;
 		for( j=0; j!=8; j++ )
 		{ int step = RB_dirs[j]; int d = i;
