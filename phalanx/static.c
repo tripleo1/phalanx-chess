@@ -1315,7 +1315,7 @@ printboard(); printf("%02i",sq); getchar();
 
 		r=j/10;		/* 2...10 */
 
-		if( b[j]==WP && b[j+1] ) r--;
+		if( b[j]==WP && b[j+10] ) r--;
 
 		mrr = err = frb[r];
 
