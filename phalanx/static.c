@@ -592,7 +592,7 @@ break;
 		}
 		else if( (P[i]&WPM) == 0 ) /* not pawn-protected */
 		{
-		  if(B[i]==WP) result += (P[i]>>13)*5;
+		  if(B[i]==WP) result -= (P[i]>>13)*5;
 		  else Wknow.hung += 6;
 		}
 	}
@@ -610,7 +610,7 @@ break;
 		}
 		else if( (P[i]&BPM) == 0 ) /* not pawn-protected */
 		{
-		  if(B[i]==BP) result -= ((P[i]>>5)&0x7)*5;
+		  if(B[i]==BP) result += ((P[i]>>5)&0x7)*5;
 		  else Bknow.hung += 6;
 		}
 	}
