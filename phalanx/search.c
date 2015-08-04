@@ -82,8 +82,10 @@ for( i=0; i!=n; i++ )
 #define	LMRLMP /* late move reductions and pruning */
 #ifdef	LMRLMP
 /* Entry condition simplified since XXIV, now we do reduce captures,
- * promotions and check evasions. */
+ * promotions and check evasions.  We do not reduce if Alpha is
+ * a mate-in-n score, reducing may then lead to false mate announcements. */
 		if(    Depth > 0
+		    && Alpha > -29000 && Alpha < 29000
 		    && !S[Ply].check /* checking move */
 		    && i > 2
 		  )
