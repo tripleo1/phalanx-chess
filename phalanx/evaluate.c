@@ -483,6 +483,45 @@ else
 	}
 #endif
 
+#define PROBCUT
+#ifdef PROBCUT
+#define MRGN 190
+/*
+ *  If we have a capture that can get us above Beta+MRGN, we try to
+ *  search the capturing move at a reduced depth and with raised Beta.
+ *  If we then get a fail high, the previous opponent move was likely
+ *  a blunder and we can prune this node.
+ *  This is complementary to null move pruning. Null move can prune many
+ *  weak moves, but not those that create a threat, e.g. unprotected rook
+ *  attacks queen - null move allows capturing the queen and thus cannot
+ *  prune the silly attack, whereas in ProbCut queen captures the rook,
+ *  confirms with the reduced search that the previous opponent move
+ *  was a blunder and prunes.
+ */
+
+if( Depth>350 && Beta-Alpha==1 && !check )
+{
+	int i;
+	int r = Alpha;
+	int olddepth = Depth;
+
+	Depth-= 350;
+
+	for( i=0; i!=n; i++ )
+	if( m[i].in2 && result+Values[m[i].in2>>4] >= Beta+MRGN )
+	{
+		do_move(m+i); S[Ply].check=checktest(Color);
+		r = - evaluate( -Beta-MRGN, -Beta-MRGN+1 );
+		undo_move(m+i);
+		if( r>=Beta+MRGN ) break;
+	}
+	Depth = olddepth;
+
+	if( r>= Beta+MRGN ) { result = Beta; goto end; }
+}
+
+#endif /* PROBCUT */
+
 #ifdef CHECK_EXTENSIONS
 	if( check && Depth>0 )
 	{
