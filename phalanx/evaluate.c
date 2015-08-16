@@ -751,7 +751,7 @@ if( Flag.nps )
 	if( Nodes%(1+Flag.nps/500)==0 )
 	{
 		int nps_actual = Nodes*100/max(ptime()-T1,1);
-		if( nps_actual > Flag.nps ) usleep(100000);
+		if( nps_actual > Flag.nps && !Abort ) usleep(100000);
 	}
 }
 
