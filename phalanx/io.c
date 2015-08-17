@@ -1787,7 +1787,7 @@ while( command() )
 				  && Pondermove.in1 == Pm[i].in1
 				  && Pondermove.in2a == Pm[i].in2a ) break;
 
-				if( i==Pn )
+				if( i==Pn && Flag.nps==0 )
 				{
 					if( Flag.post )
 					{
