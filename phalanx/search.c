@@ -6,6 +6,8 @@
 
 #include "phalanx.h"
 
+extern long Time;
+
 #define update_PV(move, ply)				\
 {							\
     register int jj;					\
@@ -174,7 +176,6 @@ int sort_root_moves( tmove *m, int n )
 	PV[0][0] = m[0];
 
 	EasyMove = 0;
-	Depth = 100;
 
 	for( i=0; i!=n; i++ )
 	{
@@ -298,6 +299,10 @@ else
 
 	Ply = 0;
 
+	if( Flag.nps==0 ) Depth=190;
+	else if( Time>400000/Flag.nps ) Depth=90;
+	else Depth=-10;
+
 	if(!Flag.easy)
 		LastIter = Alpha = sort_root_moves( m, n );
 	else
@@ -332,7 +337,7 @@ else
 
 	FollowPV = 1;
 	NoAbort = 0;
-	if(Flag.nps<=1000) Depth=190; else Depth = 290;
+	Depth += 100;
 	Ply = 0;
 	A_d = Depth/100;
 
@@ -340,7 +345,7 @@ else
 
 	if( !Flag.polling ) signal(SIGINT,interrupt);
 
-	Turns=n;
+	Turns=0;
 
 	while(   ( Flag.ponder==2 || l_iterate() || Flag.analyze )
 	      && !Abort && Depth < MAXPLY*100      )

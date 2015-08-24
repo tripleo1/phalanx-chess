@@ -1,7 +1,7 @@
 #ifndef PHALANX_INCLUDED
 #define PHALANX_INCLUDED
 
-#define ENGNAME "Phalanx"
+#define ENGNAME "PhalanxDev"
 #define VERSION "XXIV+"
 
 #ifdef GNUFUN
