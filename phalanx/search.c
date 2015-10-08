@@ -324,7 +324,7 @@ else
 	if( EasyMove == 3 && ! Flag.analyze ) { do_move(m); return m[0]; }
 
 	/* randomize root moves */
-	if( Flag.random && Counter <= Flag.rndlim )
+	if( Flag.random && ( Flag.rndlim==0 || Counter <= Flag.rndlim ) )
 	for( i=0; i!=n; i++ )
 	{
 		rr[i] = rand()%(Flag.random+1) - Flag.random/2;
