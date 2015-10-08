@@ -30,6 +30,7 @@ printf("\n"
        "          -r <resign value in centipawns>     default: 0 (no resigning)\n"
        "          -e <easy level 0...100>             default: 0 (best play)\n"
        "          -z <randomize moves by centipawns>  default: 0 (best play)\n"
+       "          -z <centipawns>:<move number limit>\n"
        "          -n <NPS limit, min limit is 100>    default: no limit\n"
        "          -l <+/->  learning on/off           default: on\n"
        "          -v        print version and exit\n"
@@ -152,6 +153,7 @@ Flag.resign = 0;
 Flag.nps = 0;
 Flag.easy = 0;
 Flag.random = 0;
+Flag.rndlim = 0;
 Flag.noise = 50;         /* 0.5 s */
 Flag.learn = 0;
 Flag.bench = 0;
@@ -200,10 +202,12 @@ switch(c)
 		} break;
 	case 'z':
 		{
-		int r;
-		if( sscanf( optarg, "%i", &r ) == 0 ) badoptions();
-		if( r < 0 ) badoptions();
+		int r,rl=0;
+		if( sscanf( optarg, "%i:%i", &r, &rl ) == 0 )
+			badoptions();
+		if( r < 0 || rl<0 ) badoptions();
 		Flag.random = r;
+		Flag.rndlim = 2*rl;
 		} break;
 	case 'n':
 		{

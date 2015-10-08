@@ -1,7 +1,7 @@
 #ifndef PHALANX_INCLUDED
 #define PHALANX_INCLUDED
 
-#define ENGNAME "PhalanxDev"
+#define ENGNAME "Phalanx"
 #define VERSION "XXIV+"
 
 #ifdef GNUFUN
@@ -151,6 +151,7 @@ typedef struct
   int nps;
   int easy;
   int random;
+  int rndlim;
   FILE	* log;
 } tflag;
 

@@ -118,6 +118,11 @@ COMMAND LINE OPTIONS
        Randomize play. Add pseudo-random values to root moves evaluations.
        The numeric value limits the random range, the interval of random
        evaluations to be added is [-N/2 ... N/2].
+    -z <random evaluation in centipawns>:<N>
+       Like above, but only randomize first N moves. This is to avoid repeating
+       lines in opening, while keeping almost the same playing strength. For
+       example, -z 20:10 will randomize first 10 moves in the game by
+       20 centipawns.
     -n <nodes per second>                         default: 0 (no limit)
        Limits the speed to weaken the engine and to use less resources: The
        speed of the machine does not matter here, it uses usleep() during
