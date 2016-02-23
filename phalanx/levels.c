@@ -3,7 +3,7 @@
 long T1, T2;
 
 long Time = 600*100;
-long Otim = 600*100;
+long Otim = 100;
 
 
 /* return time in centiseconds */
@@ -128,6 +128,20 @@ void l_startsearch(void)
 		{
 		   if( Time<150/*0*/ ) T2 -= T2/2;
 		   else if( Time<600/*0*/ ) T2 -= T2/4;
+
+		   if(    Flag.moves==0  /* all moves TC */
+		       && Time < Otim    /* less time than opponent */
+		       && Time < 600*100 /* and less than 10 minutes */
+		       && Flag.ponder != 2 )
+		   {
+			long Reduction;
+			Reduction = T2 - T2*(Time+Time)/(Otim+Time);
+			Reduction = Reduction*(60000-Time)/(60000);
+
+/* printf("telluser Ponder=%i Time=%li Otim=%li reducing %li by %li\n", Flag.ponder, Time, Otim, T2, Reduction); */
+
+			T2 -= Reduction;
+		   }
 		}
 
 		if( Flag.post && Flag.xboard<2 )
