@@ -9,7 +9,7 @@
 
 #define EXTENSION_BASE 80
 
-#define NULL_MOVE_PRUNING 350
+#define NULL_MOVE_PRUNING
 
 #define RECAPTURE_EXTENSIONS
 #define PEE_EXTENSIONS     /* entering kings+pawns endgame extends */
@@ -442,14 +442,14 @@ else
 #ifdef NULL_MOVE_PRUNING
 	if(
 		Depth > 100
-		&& ( result >= Beta || Depth > NULL_MOVE_PRUNING )
+		&& ( result >= Beta || Depth > 350 )
 		&& ! FollowPV
 		&& ! check
 		&& n>4
 		&& ( (Color==WHITE) ? (Wknow.q||Wknow.r||Wknow.b||Wknow.n>1)
 		                    : (Bknow.q||Bknow.r||Bknow.b||Bknow.n>1) )
 		&& G[Counter-1].m.special != NULL_MOVE  /* prev. node not nm */
-		&& ( t==NULL || t->depth <= Depth-NULL_MOVE_PRUNING
+		&& ( t==NULL || t->depth <= Depth-350
 		  || t->result==beta_cut || t->value >= Beta )
 	)
 	{
@@ -469,7 +469,9 @@ else
 		Color = enemy(Color);
 		S[Ply].check=0;
 
-		Depth -= NULL_MOVE_PRUNING;
+		/* reduction depends on number of moves generated */
+		/* n=20 ... R=2, n=40 ... R=3, n=50 ... R=3.5 */
+		Depth -= 200 + n*5;
 
 		if(Depth<0) Depth=0; else Depth -= Depth/4;
 		value = -evaluate(-Beta, -Beta+1);
