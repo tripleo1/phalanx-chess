@@ -299,3 +299,11 @@ XXIV      Xboard protocol - 'memory' command support.  New file phalanx.eng to
           learning is now off by default.  Tweaked polling input timeslice to
           better handle rapid changes in analyze mode.  Fixed GCC warnings.
 
+XXV       Better time management to use more time if the best move changed
+20160501  recently.  Search improvements: Added simple ProbCut, tuned null move
+          and LMR, simplified check evasion extension.  Static evaluation bug
+          fixes, several of them submitted by Fabrice Lecouvey, thanks.  New
+          parameter to root moves randomization, it can now be limited
+          to first N moves of the game.  New opening book generated from
+          KingBase Lite 03/2016 (http://www.kingbase-chess.net/).
+
