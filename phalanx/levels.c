@@ -201,7 +201,7 @@ int l_iterate(void)
 				 if( Turns==0 )
 					return ( t <= T1 + T2 );
 				 else
-					return ( t <= T1 + T2*(14+Turns)/10 );
+					return ( t <= T1 + T2*(19+Turns)/10 );
 		}
 	}
 	else
